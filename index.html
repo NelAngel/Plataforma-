@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>RentExpress Pro · Periodos a medida (meses/años/días) · Ganancias totales</title>
+  <title>RentExpress Perú · Fechas exactas (UTC-5) · Ganancias totales</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -68,6 +68,17 @@
     .total-earnings {
       background: #e2f3e9;
       color: #1d6e42;
+    }
+
+    .peru-time {
+      background: #e8f0fe;
+      color: #1a5276;
+      font-family: monospace;
+      font-size: 0.75rem;
+      padding: 6px 16px;
+      border-radius: 40px;
+      display: inline-block;
+      margin-top: 8px;
     }
 
     .form-card {
@@ -291,8 +302,9 @@
 <div class="container">
   <div class="header">
     <div class="title-section">
-      <h1>⚡ RentExpress Pro · S/</h1>
-      <div class="sub">Periodos en días, meses o años · Elige cualquier cantidad (1, 2, 3, 4... meses o años)</div>
+      <h1>⚡ RentExpress Perú · S/</h1>
+      <div class="sub">Fechas exactas (UTC-5) · Periodos en días, meses o años · Ganancias totales</div>
+      <div class="peru-time" id="peruDateTime">🕒 Cargando hora de Perú...</div>
     </div>
     <div class="stats-panel">
       <div class="stat-card" id="totalCount">📋 0 alquileres</div>
@@ -357,15 +369,53 @@
       <tbody id="tableBody"><tr><td colspan="12" style="text-align:center;">Cargando datos...</td></tr></tbody>
     </table>
   </div>
-  <footer>📲 Mensajes formales con el nombre del usuario. Puedes elegir cualquier cantidad de meses, años o días (ej: 2 meses, 3 meses, 1 año, 2 años). Las ganancias se suman automáticamente.</footer>
+  <footer>📲 Los cálculos de días restantes usan la hora oficial de Perú (UTC-5). Los mensajes son personalizados con el nombre del usuario.</footer>
 </div>
 
 <script>
-  // ---------- MODELO ----------
-  let rentals = [];
-  let editModeId = null;
+  // ======================== ZONA HORARIA PERÚ (UTC-5) ========================
+  function getPeruCurrentDate() {
+    // Obtiene la fecha actual en formato YYYY-MM-DD (sin hora) basada en UTC-5
+    const now = new Date();
+    // Ajustar a UTC-5 (Perú)
+    const offsetPeru = -5 * 60; // minutos
+    const localOffset = now.getTimezoneOffset(); // minutos diferencia con UTC
+    const diff = offsetPeru - localOffset;
+    const peruDate = new Date(now.getTime() + diff * 60000);
+    return peruDate.toISOString().split('T')[0];
+  }
 
-  // Funciones de fechas
+  function getPeruCurrentDateTimeFormatted() {
+    const now = new Date();
+    const offsetPeru = -5 * 60;
+    const localOffset = now.getTimezoneOffset();
+    const diff = offsetPeru - localOffset;
+    const peruDate = new Date(now.getTime() + diff * 60000);
+    return peruDate.toLocaleString('es-PE', { timeZone: 'America/Lima', hour12: false });
+  }
+
+  // Actualizar reloj Perú en tiempo real
+  function updatePeruClock() {
+    const elem = document.getElementById('peruDateTime');
+    if (elem) {
+      const ahora = new Date().toLocaleString('es-PE', { timeZone: 'America/Lima', hour12: false });
+      elem.innerHTML = `🕒 Perú: ${ahora}`;
+    }
+  }
+  setInterval(updatePeruClock, 1000);
+  
+  // Función para calcular días restantes entre dos fechas (YYYY-MM-DD) en zona Perú
+  function daysRemainingPeru(endDateStr) {
+    if (!endDateStr) return null;
+    const todayPeruStr = getPeruCurrentDate(); // "2026-06-13"
+    const today = new Date(todayPeruStr);
+    const end = new Date(endDateStr);
+    const diffTime = end - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+
+  // Sumar periodo a una fecha respetando zona Perú (no cambia zona, solo suma)
   function addPeriodToDate(startDateStr, value, unit) {
     const date = new Date(startDateStr);
     if (isNaN(date.getTime())) return "";
@@ -375,15 +425,9 @@
     return date.toISOString().split('T')[0];
   }
 
-  function daysRemaining(endDateStr) {
-    if (!endDateStr) return null;
-    const today = new Date(); today.setHours(0,0,0,0);
-    const end = new Date(endDateStr); end.setHours(0,0,0,0);
-    return Math.ceil((end - today) / (1000*60*60*24));
-  }
-
+  // Funciones auxiliares para renderizado
   function getRemainingText(endDateStr) {
-    const days = daysRemaining(endDateStr);
+    const days = daysRemainingPeru(endDateStr);
     if (days === null) return "—";
     if (days < 0) return `⏰ Vencido (hace ${Math.abs(days)}d)`;
     if (days === 0) return "⚡ Último día";
@@ -392,7 +436,7 @@
   }
 
   function getStatusClass(endDateStr) {
-    const days = daysRemaining(endDateStr);
+    const days = daysRemainingPeru(endDateStr);
     if (days === null) return "status-ok";
     if (days < 0) return "status-critical";
     if (days <= 2) return "status-warning";
@@ -400,7 +444,7 @@
   }
 
   function needsUrgentRenewal(endDateStr) {
-    const days = daysRemaining(endDateStr);
+    const days = daysRemainingPeru(endDateStr);
     return days !== null && days >= 0 && days <= 2;
   }
 
@@ -427,7 +471,7 @@
 
   // Mensajes formales con nombre de usuario
   function generateWhatsAppMessage(rental) {
-    const days = daysRemaining(rental.endDate);
+    const days = daysRemainingPeru(rental.endDate);
     const userName = rental.userName;
     const platform = rental.platform;
     const startF = formatDateToDMY(rental.startDate);
@@ -470,17 +514,20 @@
   }
 
   // Almacenamiento local
+  let rentals = [];
+  let editModeId = null;
+
   function saveToLocal() {
-    localStorage.setItem('rentExpressProFinal', JSON.stringify(rentals));
+    localStorage.setItem('rentExpressPeru', JSON.stringify(rentals));
   }
   function loadInitial() {
-    const stored = localStorage.getItem('rentExpressProFinal');
+    const stored = localStorage.getItem('rentExpressPeru');
     if (stored && JSON.parse(stored).length) rentals = JSON.parse(stored);
     else addDemoData();
     sortByEnd();
   }
   function addDemoData() {
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy = getPeruCurrentDate();
     rentals = [
       { id: 101, userName: "Marco Díaz", platform: "Netflix", startDate: "2025-05-09", periodValue: 1, periodUnit: "months", endDate: "2025-06-09", costPrice: 40, sellPrice: 75, whatsapp: "51912345678", purchaseNote: "Mensual" },
       { id: 102, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, periodValue: 3, periodUnit: "months", endDate: addPeriodToDate(hoy, 3, "months"), costPrice: 100, sellPrice: 190, whatsapp: "51998765432", purchaseNote: "Trimestre" },
@@ -501,7 +548,7 @@
 
   function renderTable() {
     const tbody = document.getElementById('tableBody');
-    if (!rentals.length) { tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;">✨ Sin alquileres. Usa "Rápido: Ejemplo" o agrega uno.</td></tr>'; return; }
+    if (!rentals.length) { tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;">✨ Sin alquileres. Usa "Rápido: Ejemplo" o agrega uno.</td><tr>'; return; }
     let html = '';
     for (let r of rentals) {
       const benef = (r.sellPrice - r.costPrice).toFixed(2);
@@ -525,7 +572,7 @@
           <button class="small-btn wapp-btn" data-id="${r.id}" data-action="wapp">💬 WP</button>
           <button class="small-btn edit-btn" data-id="${r.id}" data-action="edit">✏️</button>
           <button class="small-btn del-btn" data-id="${r.id}" data-action="delete">🗑️</button>
-        </td>
+         </td>
       </tr>`;
     }
     tbody.innerHTML = html;
@@ -547,7 +594,7 @@
     if (!urgent.length) { container.innerHTML = `<div class="no-alert">✅ No hay alquileres con menos de 3 días restantes.</div>`; return; }
     let html = `<div style="margin-bottom: 8px;"><strong>⚠️ RENOVACIÓN URGENTE (menos de 3 días)</strong></div>`;
     for (let u of urgent) {
-      const days = daysRemaining(u.endDate);
+      const days = daysRemainingPeru(u.endDate);
       html += `<div class="alert-card">
         <div class="alert-info"><span style="background:#ffe6c4; padding:4px 14px; border-radius:40px;">⏰ ${days === 0 ? "Hoy vence" : `Faltan ${days} días`}</span>
         <strong>👤 ${escapeHtml(u.userName)}</strong> <span>📱 ${escapeHtml(u.platform)}</span> <span>📅 Fin: ${u.endDate}</span></div>
@@ -573,7 +620,7 @@
     const whatsappRaw = document.getElementById('whatsappNumber').value.trim();
     const purchaseNote = document.getElementById('purchaseNote').value.trim();
 
-    if (!userName || !platform || !startDate || isNaN(periodValue) || periodValue <= 0) { alert("Completa los campos obligatorios (Usuario, Plataforma, Fecha inicio, Cantidad válida)."); return; }
+    if (!userName || !platform || !startDate || isNaN(periodValue) || periodValue <= 0) { alert("Completa los campos obligatorios."); return; }
     if (isNaN(costPrice) || isNaN(sellPrice) || costPrice < 0 || sellPrice < 0) { alert("Precios inválidos."); return; }
     if (!whatsappRaw) { alert("WhatsApp: ingresa 9 dígitos."); return; }
     const formattedWhats = formatPeruvianNumber(whatsappRaw);
@@ -616,7 +663,7 @@
   }
 
   function deleteRentalById(id) {
-    if (confirm("¿Eliminar este alquiler? La ganancia asociada se perderá.")) {
+    if (confirm("¿Eliminar este alquiler?")) {
       rentals = rentals.filter(r => r.id !== id);
       if (editModeId === id) resetForm();
       sortByEnd();
@@ -650,7 +697,7 @@
   }
 
   function quickExample() {
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy = getPeruCurrentDate();
     document.getElementById('userName').value = "Cliente Demo";
     document.getElementById('platform').value = "Plataforma Ejemplo";
     document.getElementById('startDate').value = hoy;
@@ -687,7 +734,7 @@
     });
   });
 
-  function init() { loadInitial(); renderAll(); updateEndPreview(); setInterval(()=> renderAll(), 60000); }
+  function init() { loadInitial(); renderAll(); updateEndPreview(); setInterval(()=> renderAll(), 60000); updatePeruClock(); }
   init();
 </script>
 </body>
