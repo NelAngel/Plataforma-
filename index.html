@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>RentExpress · Gestión Rápida (Soles · WhatsApp Perú)</title>
+  <title>RentExpress Pro · Periodos personalizables (meses/años/días) · Ganancias totales</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -13,275 +13,326 @@
     }
 
     body {
-      background: #eef2f8;
+      background: #f0f4f9;
       font-family: 'Inter', system-ui, sans-serif;
-      padding: 1.5rem;
-      color: #0a1c2f;
+      padding: 28px 24px;
+      color: #0a2b3c;
     }
 
     .container {
-      max-width: 1500px;
+      max-width: 1600px;
       margin: 0 auto;
     }
 
+    /* Header */
     .header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: flex-end;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      gap: 20px;
+      margin-bottom: 32px;
     }
-    h1 {
+    .title-section h1 {
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #1e3a5f, #2b5e3b);
+      background: linear-gradient(135deg, #1a5f5f, #2d7a47);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
     }
     .sub {
       font-size: 0.85rem;
-      color: #2c4e6e;
-      border-left: 3px solid #2c7a4d;
-      padding-left: 0.8rem;
-      margin-top: 0.2rem;
+      color: #2c6b5e;
+      border-left: 3px solid #2d8c5a;
+      padding-left: 14px;
+      margin-top: 6px;
     }
-    .stats {
+    .stats-panel {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
       background: white;
-      padding: 0.3rem 1rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
+      border-radius: 60px;
+      padding: 8px 24px;
       font-weight: 600;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .total-earnings {
+      background: #e2f3e9;
+      color: #1d6e42;
     }
 
+    /* Formulario */
     .form-card {
       background: white;
-      border-radius: 1.8rem;
-      padding: 1.5rem 1.8rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 10px 20px -8px rgba(0,0,0,0.08);
-      border: 1px solid #e9edf2;
+      border-radius: 32px;
+      padding: 28px 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 12px 28px -10px rgba(0,0,0,0.08);
+      border: 1px solid #e6edf2;
     }
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem 1.2rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px 24px;
       align-items: end;
     }
     .input-group {
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
+      gap: 6px;
     }
     .input-group label {
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
-      color: #2b5b7a;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
+      color: #2a7353;
     }
-    input, button {
-      border-radius: 1rem;
+    input, select, button {
+      border-radius: 20px;
       border: 1px solid #cfdee9;
-      padding: 0.6rem 0.9rem;
-      font-size: 0.85rem;
+      padding: 10px 14px;
+      font-size: 0.9rem;
       font-family: 'Inter', monospace;
+      background: white;
+      transition: 0.15s;
     }
-    input:focus {
+    input:focus, select:focus {
       outline: none;
-      border-color: #2c7a4d;
-      box-shadow: 0 0 0 3px rgba(44,122,77,0.15);
-    }
-    .readonly-fld {
-      background: #f4f9fe;
-      font-weight: 500;
+      border-color: #2d8c5a;
+      box-shadow: 0 0 0 3px rgba(45,140,90,0.15);
     }
     button {
-      background: #1f4f2d;
+      background: #236b44;
       color: white;
       font-weight: 600;
       border: none;
       cursor: pointer;
-      transition: 0.1s;
     }
-    button:hover { background: #2c6e3f; transform: translateY(-1px); }
+    button:hover {
+      background: #2c8254;
+      transform: translateY(-1px);
+    }
     .btn-outline {
-      background: #f0f4fa;
-      color: #1e4663;
+      background: #f0f5fa;
+      color: #1f6b55;
       border: 1px solid #cbdae6;
     }
-    .btn-outline:hover { background: #e6edf5; transform: none; }
-    .quick-btn {
-      background: #fef9e3;
+    .quick-preset {
+      background: #fef2e0;
       color: #b45f1b;
-      border: 1px solid #fde5b4;
+      border: 1px solid #fee2bc;
       font-size: 0.75rem;
-      padding: 0.4rem 0.8rem;
+      padding: 6px 14px;
+      border-radius: 30px;
     }
-    .quick-btn:hover { background: #fee8c3; }
+    .preset-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e3eef5;
+    }
+    .helper-note {
+      font-size: 0.65rem;
+      color: #5f8b74;
+      margin-top: 4px;
+    }
 
-    .alerts-section { margin-bottom: 1.8rem; }
+    /* Alertas */
+    .alerts-section {
+      margin-bottom: 28px;
+    }
     .alert-card {
-      background: #fffaf2;
-      border-left: 7px solid #e67e22;
-      border-radius: 1.3rem;
-      padding: 0.8rem 1.2rem;
-      margin-bottom: 0.8rem;
+      background: #fffaf0;
+      border-left: 6px solid #f2a65a;
+      border-radius: 24px;
+      padding: 12px 20px;
+      margin-bottom: 12px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 0.8rem;
-    }
-    .alert-info {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: baseline;
-      font-size: 0.85rem;
+      gap: 12px;
     }
     .no-alert {
-      background: #e0f2e9;
-      border-radius: 1.3rem;
-      padding: 0.8rem;
+      background: #e5f3ec;
+      border-radius: 24px;
+      padding: 12px 20px;
       text-align: center;
       font-weight: 500;
     }
 
+    /* Tabla */
     .table-wrapper {
       background: white;
-      border-radius: 1.5rem;
+      border-radius: 28px;
       overflow-x: auto;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+      border: 1px solid #ecf3f8;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.8rem;
-      min-width: 800px;
+      min-width: 1050px;
     }
     th, td {
-      padding: 0.9rem 0.8rem;
+      padding: 14px 12px;
       text-align: left;
-      border-bottom: 1px solid #eef2f5;
+      border-bottom: 1px solid #eef2f8;
     }
     th {
-      background: #f9fbfe;
-      color: #1c5a7a;
+      background: #fbfdfe;
+      color: #1a6f5a;
       font-weight: 700;
     }
-    tr:hover td { background: #fefcf7; }
+    tr:hover td {
+      background: #fefcf6;
+    }
     .status-badge {
       display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 30px;
+      padding: 4px 12px;
+      border-radius: 40px;
       font-size: 0.7rem;
       font-weight: 700;
     }
-    .status-critical { background: #ffe3df; color: #b12a1a; }
-    .status-warning { background: #fff0de; color: #bc6f1c; }
-    .status-ok { background: #dcfce7; color: #1a6e3f; }
+    .status-critical { background: #ffe8e4; color: #b93a2a; }
+    .status-warning { background: #fff0e0; color: #c7791a; }
+    .status-ok { background: #e2f4ea; color: #1f7a45; }
+    .beneficio {
+      font-weight: 700;
+      color: #1f8a4a;
+    }
     .small-btn {
-      padding: 0.25rem 0.6rem;
+      padding: 5px 12px;
       font-size: 0.7rem;
-      border-radius: 30px;
+      border-radius: 40px;
       background: #f0f4f9;
       border: none;
       font-weight: 600;
       cursor: pointer;
+      margin-right: 5px;
     }
-    .wapp-btn { background: #dcf8e5; color: #075e54; }
-    .wapp-btn:hover { background: #c0e6cd; }
-    .edit-btn { background: #e3ecf9; color: #1f6392; }
-    .del-btn { background: #fee9e5; color: #c5301c; }
-    .beneficio { font-weight: 700; color: #1f7942; }
-    .helper-note {
-      font-size: 0.65rem;
-      color: #2c7a4d;
-      margin-top: 0.2rem;
-    }
+    .wapp-btn { background: #d9f5e6; color: #075e54; }
+    .edit-btn { background: #e3edfc; color: #1f6392; }
+    .del-btn { background: #fee9e5; color: #bc2c1c; }
     footer {
-      margin-top: 2rem;
+      margin-top: 28px;
       text-align: center;
       font-size: 0.7rem;
-      color: #4b6f8c;
+      color: #6b9a80;
     }
-    @media (max-width: 700px) {
-      body { padding: 1rem; }
-      .form-card { padding: 1rem; }
+    @media (max-width: 760px) {
+      body { padding: 16px; }
+      .form-card { padding: 20px; }
     }
   </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <div>
-      <h1>⚡ RentExpress · S/</h1>
-      <div class="sub">Alquileres rápidos · Alertas personalizadas (con nombre y tono formal)</div>
+    <div class="title-section">
+      <h1>⚡ RentExpress Pro · S/</h1>
+      <div class="sub">Periodos en días, meses o años · Elige cantidad exacta (1,2,3,4... meses/años)</div>
     </div>
-    <div class="stats" id="totalStats"></div>
+    <div class="stats-panel">
+      <div class="stat-card" id="totalCount">📋 0 alquileres</div>
+      <div class="stat-card total-earnings" id="totalEarnings">💰 Ganancia total: S/ 0.00</div>
+    </div>
   </div>
 
-  <!-- Formulario -->
+  <!-- Formulario principal con campo numérico y selector de unidad -->
   <div class="form-card">
     <form id="rentalForm">
       <div class="form-grid">
         <div class="input-group"><label>👤 Usuario</label><input type="text" id="userName" placeholder="Ej: Sofía Ramírez" required></div>
-        <div class="input-group"><label>📱 Plataforma</label><input type="text" id="platform" placeholder="Netflix, Disney+, etc" required></div>
-        <div class="input-group"><label>📅 Inicio</label><input type="date" id="startDate" required></div>
-        <div class="input-group"><label>⏱️ Días duración</label><input type="number" id="durationDays" value="30" min="1" step="1" required></div>
+        <div class="input-group"><label>📱 Plataforma</label><input type="text" id="platform" placeholder="Netflix, Disney+..." required></div>
+        <div class="input-group"><label>📅 Fecha inicio</label><input type="date" id="startDate" required></div>
+        
+        <div class="input-group">
+          <label>🔢 Cantidad (número de unidades)</label>
+          <input type="number" id="periodValue" value="1" min="0.5" step="1" required>
+          <div class="helper-note">Ej: 2, 3, 6, 12</div>
+        </div>
+        <div class="input-group">
+          <label>📆 Unidad</label>
+          <select id="periodUnit">
+            <option value="days">Días</option>
+            <option value="months" selected>Meses</option>
+            <option value="years">Años</option>
+          </select>
+        </div>
         <div class="input-group"><label>💰 Costo (S/)</label><input type="number" id="costPrice" step="0.01" value="45.00" required></div>
         <div class="input-group"><label>💵 Venta (S/)</label><input type="number" id="sellPrice" step="0.01" value="85.00" required></div>
-        <div class="input-group">
-          <label>📞 WhatsApp (solo 9 dígitos)</label>
-          <input type="tel" id="whatsappNumber" placeholder="Ej: 987654321" required>
-          <div class="helper-note">🔹 Solo número de 9 dígitos (ej: 987654321). El código 51 se agrega automáticamente.</div>
-        </div>
-        <div class="input-group"><label>🔚 Fin (auto)</label><input type="text" id="endDatePreview" class="readonly-fld" readonly></div>
-        <div class="input-group" style="display: flex; flex-direction: row; gap: 0.5rem; align-items: center;">
-          <button type="submit" id="submitBtn">➕ Agregar</button>
+        <div class="input-group"><label>📞 WhatsApp (9 dígitos)</label><input type="tel" id="whatsappNumber" placeholder="987654321" required><div class="helper-note">🔹 Solo 9 dígitos (se agrega 51 automáticamente)</div></div>
+        <div class="input-group"><label>📝 Nota / compra (opcional)</label><input type="text" id="purchaseNote" placeholder="Ej: compra 3 meses"></div>
+        <div class="input-group"><label>🔚 Fecha fin (automática)</label><input type="text" id="endDatePreview" class="readonly-fld" readonly style="background:#f4f9fe;"></div>
+        <div class="input-group" style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
+          <button type="submit" id="submitBtn">➕ Agregar alquiler</button>
           <button type="button" id="cancelEditBtn" class="btn-outline" style="display:none;">✖️ Cancelar</button>
-          <button type="button" id="quickFillBtn" class="quick-btn" style="margin-left:auto;">🚀 Rápido: Ejemplo</button>
+          <button type="button" id="quickFillBtn" style="background:#f4e6c3; color:#8a5a2c;">🚀 Rápido: Ejemplo</button>
         </div>
+      </div>
+      
+      <!-- Botones rápidos para meses y años comunes -->
+      <div class="preset-group">
+        <span style="font-size:0.7rem; font-weight:600; background:#eef3f0; padding:4px 12px; border-radius:30px;">📌 Seleccionar periodo rápido:</span>
+        <button type="button" class="quick-preset" data-value="1" data-unit="months">1 mes</button>
+        <button type="button" class="quick-preset" data-value="2" data-unit="months">2 meses</button>
+        <button type="button" class="quick-preset" data-value="3" data-unit="months">3 meses</button>
+        <button type="button" class="quick-preset" data-value="4" data-unit="months">4 meses</button>
+        <button type="button" class="quick-preset" data-value="6" data-unit="months">6 meses</button>
+        <button type="button" class="quick-preset" data-value="12" data-unit="months">1 año (12 meses)</button>
+        <button type="button" class="quick-preset" data-value="2" data-unit="years">2 años</button>
+        <button type="button" class="quick-preset" data-value="7" data-unit="days">7 días</button>
+        <button type="button" class="quick-preset" data-value="15" data-unit="days">15 días</button>
       </div>
     </form>
   </div>
 
-  <!-- Alertas renovación urgente -->
+  <!-- Alertas urgentes -->
   <div class="alerts-section" id="urgentAlertsContainer"></div>
 
-  <!-- Tabla -->
+  <!-- Tabla de alquileres -->
   <div class="table-wrapper">
     <table>
-      <thead><tr><th>Usuario</th><th>Plataforma</th><th>Inicio</th><th>Fin</th><th>Costo S/</th><th>Venta S/</th><th>Beneficio</th><th>Tiempo</th><th>WhatsApp</th><th>Acciones</th></tr></thead>
-      <tbody id="tableBody"><tr><td colspan="10" style="text-align:center;">Cargando...</td></tr></tbody>
+      <thead>——
+<th>Usuario</th><th>Plataforma</th><th>Inicio</th><th>Fin</th><th>Periodo</th><th>Costo S/</th><th>Venta S/</th><th>Beneficio</th><th>Tiempo restante</th><th>Nota</th><th>WhatsApp</th><th>Acciones</th>
+      </thead>
+      <tbody id="tableBody"><tr><td colspan="12" style="text-align:center;">Cargando datos...</td></tr></tbody>
     </table>
   </div>
-  <footer>📲 Mensajes personalizados con el nombre del usuario, formato cordial y sin presiones. Firmado por Lyan.</footer>
+  <footer>📲 Mensajes formales con el nombre del usuario. Puedes elegir cualquier cantidad de meses, años o días (ej: 2 meses, 3 meses, 1 año, 2 años). Las ganancias se suman automáticamente.</footer>
 </div>
 
 <script>
-  // ---------- MODELO ----------
+  // ======================== MODELO Y LÓGICA ========================
   let rentals = [];
   let editModeId = null;
 
-  // Helper fechas
-  function addDaysToDate(dateStr, days) {
-    const date = new Date(dateStr);
+  // Sumar periodo a fecha
+  function addPeriodToDate(startDateStr, value, unit) {
+    const date = new Date(startDateStr);
     if (isNaN(date.getTime())) return "";
-    date.setDate(date.getDate() + days);
+    if (unit === "days") date.setDate(date.getDate() + value);
+    else if (unit === "months") date.setMonth(date.getMonth() + value);
+    else if (unit === "years") date.setFullYear(date.getFullYear() + value);
     return date.toISOString().split('T')[0];
   }
 
   function daysRemaining(endDateStr) {
     if (!endDateStr) return null;
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const end = new Date(endDateStr);
-    end.setHours(0,0,0,0);
-    return Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+    const today = new Date(); today.setHours(0,0,0,0);
+    const end = new Date(endDateStr); end.setHours(0,0,0,0);
+    return Math.ceil((end - today) / (1000*60*60*24));
   }
 
   function getRemainingText(endDateStr) {
@@ -306,7 +357,6 @@
     return days !== null && days >= 0 && days <= 2;
   }
 
-  // Formatear fecha a dd/mm/aaaa
   function formatDateToDMY(dateStr) {
     if (!dateStr) return "";
     const parts = dateStr.split('-');
@@ -314,7 +364,7 @@
     return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
-  // VALIDACIÓN DE NÚMERO PERUANO (solo 9 dígitos)
+  // Validación número peruano (9 dígitos)
   function formatPeruvianNumber(raw) {
     let cleaned = raw.replace(/\D/g, '');
     if (cleaned.length === 0) return null;
@@ -323,251 +373,178 @@
     if (cleaned.length === 10 && cleaned.startsWith('9')) return `51${cleaned}`;
     return null;
   }
-
   function isValidPeruvianNumber(raw) {
-    const formatted = formatPeruvianNumber(raw);
-    if (!formatted) return false;
-    return /^51[0-9]{9}$/.test(formatted);
+    const f = formatPeruvianNumber(raw);
+    return f && /^51[0-9]{9}$/.test(f);
   }
 
-  // --- MENSAJES FORMALES CON NOMBRE DEL USUARIO ---
+  // Mensajes formales con nombre de usuario
   function generateWhatsAppMessage(rental) {
     const days = daysRemaining(rental.endDate);
     const userName = rental.userName;
     const platform = rental.platform;
-    const startDateFormatted = formatDateToDMY(rental.startDate);
-    const endDateFormatted = formatDateToDMY(rental.endDate);
-    
-    // Caso: VENCIDO (días negativos)
+    const startF = formatDateToDMY(rental.startDate);
+    const endF = formatDateToDMY(rental.endDate);
     if (days !== null && days < 0) {
-      let mensaje = `Estimado/a ${userName},\n\nLe informamos que su período de ${platform} ha EXPIRADO.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\n⏰ Su tiempo de servicio ha concluido. Si desea renovar su suscripción, por favor indíquenoslo para gestionar la reactivación.\n\nAgradecemos su atención y quedamos atentos a su respuesta.\n\nAtentamente,\nLyan.`;
-      return encodeURIComponent(mensaje);
+      return encodeURIComponent(`Estimado/a ${userName},\n\nLe informamos que su período de ${platform} ha EXPIRADO.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\n⏰ Su tiempo de servicio ha concluido. Si desea renovar su suscripción, por favor indíquenoslo para gestionar la reactivación.\n\nAgradecemos su atención y quedamos atentos a su respuesta.\n\nAtentamente,\nLyan.`);
     }
-    
-    // Caso: faltan 3 días
     if (days === 3) {
-      let mensaje = `Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} finaliza en 3 días.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\nSi desea continuar con el servicio, puede confirmar su intención de renovación. Estaremos atentos a su respuesta.\n\nCordialmente,\nLyan.`;
-      return encodeURIComponent(mensaje);
+      return encodeURIComponent(`Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} finaliza en 3 días.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nSi desea continuar con el servicio, puede confirmar su intención de renovación. Estaremos atentos a su respuesta.\n\nCordialmente,\nLyan.`);
     }
-    
-    // Caso: faltan 2 días
     if (days === 2) {
-      let mensaje = `Estimado/a ${userName},\n\nLe informamos que su período de ${platform} vence en 2 días.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\nPara evitar la interrupción del servicio, le sugerimos considerar la renovación. Agradeceremos nos confirme su decisión.\n\nAtentamente,\nLyan.`;
-      return encodeURIComponent(mensaje);
+      return encodeURIComponent(`Estimado/a ${userName},\n\nLe informamos que su período de ${platform} vence en 2 días.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nPara evitar la interrupción del servicio, le sugerimos considerar la renovación. Agradeceremos nos confirme su decisión.\n\nAtentamente,\nLyan.`);
     }
-    
-    // Caso: falta 1 día (VENCE MAÑANA) - tono formal y sin presiones
     if (days === 1) {
-      let mensaje = `Estimado/a ${userName},\n\nLe comunicamos que su suscripción de ${platform} vence MAÑANA.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\nSi desea mantener el servicio activo, le agradeceremos nos confirme su voluntad de renovación. Quedamos a la espera de su respuesta.\n\nSaludos cordiales,\nLyan.`;
-      return encodeURIComponent(mensaje);
+      return encodeURIComponent(`Estimado/a ${userName},\n\nLe comunicamos que su suscripción de ${platform} vence MAÑANA.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nSi desea mantener el servicio activo, le agradeceremos nos confirme su voluntad de renovación. Quedamos a la espera de su respuesta.\n\nSaludos cordiales,\nLyan.`);
     }
-    
-    // Caso: hoy es el último día (0 días)
     if (days === 0) {
-      let mensaje = `Estimado/a ${userName},\n\nEl día de hoy finaliza su período de ${platform}.\n📅 Fecha de término: ${endDateFormatted}.\n\nSi requiere renovar el servicio, por favor indíquenoslo para proceder con la gestión.\n\nAgradecemos su preferencia.\n\nAtentamente,\nLyan.`;
-      return encodeURIComponent(mensaje);
+      return encodeURIComponent(`Estimado/a ${userName},\n\nEl día de hoy finaliza su período de ${platform}.\n📅 Fecha de término: ${endF}.\n\nSi requiere renovar el servicio, por favor indíquenoslo para proceder con la gestión.\n\nAgradecemos su preferencia.\n\nAtentamente,\nLyan.`);
     }
-    
-    // Caso: más de 3 días (aviso preventivo)
     if (days !== null && days > 3) {
-      let mensaje = `Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} tiene ${days} días restantes.\n📅 Fecha de finalización: ${endDateFormatted}.\n\nPuede realizar su renovación con anticipación cuando lo considere conveniente. Estamos para ayudarle.\n\nCordialmente,\nLyan.`;
-      return encodeURIComponent(mensaje);
+      return encodeURIComponent(`Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} tiene ${days} días restantes.\n📅 Fecha de finalización: ${endF}.\n\nPuede realizar su renovación con anticipación cuando lo considere conveniente. Estamos para ayudarle.\n\nCordialmente,\nLyan.`);
     }
-    
-    // Mensaje genérico (fallback)
-    let mensaje = `Estimado/a ${userName}, le contactamos para informarle sobre su servicio de ${platform}. Por favor, contáctenos para cualquier consulta. Atentamente, Lyan.`;
-    return encodeURIComponent(mensaje);
+    return encodeURIComponent(`Estimado/a ${userName}, le contactamos para informarle sobre su servicio de ${platform}. Atentamente, Lyan.`);
   }
 
   function sendWhatsAppReminder(rental) {
-    let storedNumber = rental.whatsapp;
-    if (!storedNumber) {
-      alert("⚠️ No hay número de WhatsApp registrado. Edite el registro para agregarlo.");
-      return;
-    }
-    if (!/^51[0-9]{9}$/.test(storedNumber)) {
-      alert("El número guardado no tiene formato peruano válido. Edítelo e ingrese solo los 9 dígitos.");
-      return;
-    }
-    const mensaje = generateWhatsAppMessage(rental);
-    const url = `https://wa.me/${storedNumber}?text=${mensaje}`;
-    window.open(url, '_blank');
+    if (!rental.whatsapp) { alert("⚠️ Número no registrado."); return; }
+    if (!/^51[0-9]{9}$/.test(rental.whatsapp)) { alert("Número peruano inválido."); return; }
+    const msg = generateWhatsAppMessage(rental);
+    window.open(`https://wa.me/${rental.whatsapp}?text=${msg}`, '_blank');
   }
 
-  // --- LOCALSTORAGE Y DATOS INICIALES ---
+  // Ganancias totales
+  function totalProfit() {
+    return rentals.reduce((sum, r) => sum + (r.sellPrice - r.costPrice), 0);
+  }
+  function updateStats() {
+    document.getElementById('totalCount').innerText = `📋 ${rentals.length} alquileres`;
+    document.getElementById('totalEarnings').innerHTML = `💰 Ganancia total: S/ ${totalProfit().toFixed(2)}`;
+  }
+
+  // Almacenamiento local
   function saveToLocal() {
-    localStorage.setItem('rentalManagerSolesV6', JSON.stringify(rentals));
+    localStorage.setItem('rentExpressProFinal', JSON.stringify(rentals));
   }
-
-  function loadInitialData() {
-    const stored = localStorage.getItem('rentalManagerSolesV6');
-    if (stored && JSON.parse(stored).length) {
-      rentals = JSON.parse(stored);
-    } else {
-      addDemoData();
-    }
-    sortByEndDate();
+  function loadInitial() {
+    const stored = localStorage.getItem('rentExpressProFinal');
+    if (stored && JSON.parse(stored).length) rentals = JSON.parse(stored);
+    else addDemoData();
+    sortByEnd();
   }
-
   function addDemoData() {
     const hoy = new Date().toISOString().split('T')[0];
-    const dentro2 = new Date(); dentro2.setDate(dentro2.getDate()+2);
-    const fecha2 = dentro2.toISOString().split('T')[0];
-    const dentro1 = new Date(); dentro1.setDate(dentro1.getDate()+1);
-    const fecha1 = dentro1.toISOString().split('T')[0];
-    const dentro3 = new Date(); dentro3.setDate(dentro3.getDate()+3);
-    const fecha3 = dentro3.toISOString().split('T')[0];
-    const vencido = new Date(); vencido.setDate(vencido.getDate()-3);
-    const fechaVenc = vencido.toISOString().split('T')[0];
     rentals = [
-      { id: 1001, userName: "Marco Díaz", platform: "Netflix", startDate: "2025-05-09", durationDays: 30, endDate: "2025-06-09", costPrice: 40, sellPrice: 75, whatsapp: "51912345678" },
-      { id: 1002, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, durationDays: 2, endDate: fecha2, costPrice: 38, sellPrice: 70, whatsapp: "51998765432" },
-      { id: 1003, userName: "Cliente Vencido", platform: "HBO Max", startDate: "2026-05-01", durationDays: 30, endDate: fechaVenc, costPrice: 50, sellPrice: 90, whatsapp: "5195554433" },
-      { id: 1004, userName: "Carlos Ruiz", platform: "Spotify", startDate: hoy, durationDays: 3, endDate: fecha3, costPrice: 25, sellPrice: 55, whatsapp: "51977788899" },
-      { id: 1005, userName: "Ana Quispe", platform: "Prime Video", startDate: hoy, durationDays: 1, endDate: fecha1, costPrice: 30, sellPrice: 60, whatsapp: "51999988877" }
+      { id: 101, userName: "Marco Díaz", platform: "Netflix", startDate: "2025-05-09", periodValue: 1, periodUnit: "months", endDate: "2025-06-09", costPrice: 40, sellPrice: 75, whatsapp: "51912345678", purchaseNote: "Mensual" },
+      { id: 102, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, periodValue: 3, periodUnit: "months", endDate: addPeriodToDate(hoy, 3, "months"), costPrice: 100, sellPrice: 190, whatsapp: "51998765432", purchaseNote: "Trimestre" },
+      { id: 103, userName: "Carlos Ruiz", platform: "Spotify", startDate: hoy, periodValue: 1, periodUnit: "years", endDate: addPeriodToDate(hoy, 1, "years"), costPrice: 150, sellPrice: 290, whatsapp: "51977788899", purchaseNote: "Anual" },
+      { id: 104, userName: "Ana Quispe", platform: "Prime Video", startDate: hoy, periodValue: 6, periodUnit: "months", endDate: addPeriodToDate(hoy, 6, "months"), costPrice: 200, sellPrice: 380, whatsapp: "51999988877", purchaseNote: "Semestre" },
+      { id: 105, userName: "Pedro Ríos", platform: "HBO Max", startDate: hoy, periodValue: 2, periodUnit: "months", endDate: addPeriodToDate(hoy, 2, "months"), costPrice: 70, sellPrice: 130, whatsapp: "5195554433", purchaseNote: "2 meses" }
     ];
-    rentals = rentals.map(r => ({ ...r, endDate: addDaysToDate(r.startDate, r.durationDays) }));
+  }
+  function sortByEnd() {
+    rentals.sort((a,b)=> new Date(a.endDate) - new Date(b.endDate));
   }
 
-  function sortByEndDate() {
-    rentals.sort((a,b) => new Date(a.endDate) - new Date(b.endDate));
-  }
-
+  // Renderizado
   function renderAll() {
     renderTable();
     renderUrgentAlerts();
-    document.getElementById('totalStats').innerText = `📋 ${rentals.length} alquileres activos`;
+    updateStats();
   }
 
   function renderTable() {
     const tbody = document.getElementById('tableBody');
-    if (!rentals.length) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">✨ Sin registros. Use "Rápido: Ejemplo" o añada uno.</td></tr>';
-      return;
-    }
+    if (!rentals.length) { tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;">✨ Sin alquileres. Usa "Rápido: Ejemplo" o agrega uno.</td></tr>'; return; }
     let html = '';
     for (let r of rentals) {
-      const beneficio = (r.sellPrice - r.costPrice).toFixed(2);
-      const remainingText = getRemainingText(r.endDate);
+      const benef = (r.sellPrice - r.costPrice).toFixed(2);
+      const remaining = getRemainingText(r.endDate);
       const statusClass = getStatusClass(r.endDate);
-      const displayWhats = r.whatsapp ? r.whatsapp.slice(2) : '—';
+      const phoneShort = r.whatsapp ? r.whatsapp.slice(2) : '—';
+      const periodText = `${r.periodValue} ${r.periodUnit === 'days' ? 'días' : (r.periodUnit === 'months' ? 'mes(es)' : 'año(s)')}`;
       html += `<tr>
         <td><strong>${escapeHtml(r.userName)}</strong></td>
         <td>${escapeHtml(r.platform)}</td>
         <td>${r.startDate}</td>
         <td>${r.endDate}</td>
+        <td>${periodText}</td>
         <td>S/ ${r.costPrice.toFixed(2)}</td>
         <td>S/ ${r.sellPrice.toFixed(2)}</td>
-        <td class="beneficio">+ S/ ${beneficio}</td>
-        <td><span class="status-badge ${statusClass}">${remainingText}</span></td>
-        <td><small>${escapeHtml(displayWhats)}</small></td>
-        <td class="action-buttons" style="display: flex; gap: 6px;">
+        <td class="beneficio">+ S/ ${benef}</td>
+        <td><span class="status-badge ${statusClass}">${remaining}</span></td>
+        <td><small>${escapeHtml(r.purchaseNote || '—')}</small></td>
+        <td><small>${escapeHtml(phoneShort)}</small></td>
+        <td class="action-buttons">
           <button class="small-btn wapp-btn" data-id="${r.id}" data-action="wapp">💬 WP</button>
           <button class="small-btn edit-btn" data-id="${r.id}" data-action="edit">✏️</button>
           <button class="small-btn del-btn" data-id="${r.id}" data-action="delete">🗑️</button>
-        </td>
+         </td>
       </tr>`;
     }
     tbody.innerHTML = html;
-
+    // Eventos botones
     document.querySelectorAll('.wapp-btn[data-action="wapp"]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = parseInt(btn.getAttribute('data-id'));
-        const rent = rentals.find(r => r.id === id);
-        if (rent) sendWhatsAppReminder(rent);
-      });
+      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); const r = rentals.find(x=>x.id===id); if(r) sendWhatsAppReminder(r); });
     });
     document.querySelectorAll('.edit-btn[data-action="edit"]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = parseInt(btn.getAttribute('data-id'));
-        editRentalById(id);
-      });
+      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); editRentalById(id); });
     });
     document.querySelectorAll('.del-btn[data-action="delete"]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = parseInt(btn.getAttribute('data-id'));
-        deleteRentalById(id);
-      });
+      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); deleteRentalById(id); });
     });
   }
 
   function renderUrgentAlerts() {
     const container = document.getElementById('urgentAlertsContainer');
     const urgent = rentals.filter(r => needsUrgentRenewal(r.endDate));
-    if (urgent.length === 0) {
-      container.innerHTML = `<div class="no-alert">✅ No hay alquileres con menos de 3 días restantes.</div>`;
-      return;
-    }
-    let alertsHtml = `<div style="margin-bottom: 8px;"><strong>⚠️ RENOVACIÓN URGENTE (menos de 3 días)</strong></div>`;
+    if (!urgent.length) { container.innerHTML = `<div class="no-alert">✅ No hay alquileres con menos de 3 días restantes.</div>`; return; }
+    let html = `<div style="margin-bottom: 8px;"><strong>⚠️ RENOVACIÓN URGENTE (menos de 3 días)</strong></div>`;
     for (let u of urgent) {
-      const daysLeft = daysRemaining(u.endDate);
-      alertsHtml += `
-        <div class="alert-card">
-          <div class="alert-info">
-            <span class="alert-badge" style="background:#ffe1b3; padding:0.2rem 0.8rem; border-radius:20px;">⏰ ${daysLeft === 0 ? "Hoy vence" : `Faltan ${daysLeft} días`}</span>
-            <strong>👤 ${escapeHtml(u.userName)}</strong>
-            <span>📱 ${escapeHtml(u.platform)}</span>
-            <span>📅 Fin: ${u.endDate}</span>
-          </div>
-          <button class="small-btn wapp-btn urgent-msg" data-id="${u.id}" style="background:#25D366; color:#1e3a2f;">📲 WhatsApp urgente</button>
-        </div>
-      `;
+      const days = daysRemaining(u.endDate);
+      html += `<div class="alert-card">
+        <div class="alert-info"><span style="background:#ffe6c4; padding:4px 14px; border-radius:40px;">⏰ ${days === 0 ? "Hoy vence" : `Faltan ${days} días`}</span>
+        <strong>👤 ${escapeHtml(u.userName)}</strong> <span>📱 ${escapeHtml(u.platform)}</span> <span>📅 Fin: ${u.endDate}</span></div>
+        <button class="small-btn wapp-btn urgent-msg" data-id="${u.id}" style="background:#25D366; color:#1a5738;">📲 WhatsApp urgente</button>
+      </div>`;
     }
-    container.innerHTML = alertsHtml;
+    container.innerHTML = html;
     document.querySelectorAll('.urgent-msg').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = parseInt(btn.getAttribute('data-id'));
-        const rent = rentals.find(r => r.id === id);
-        if (rent) sendWhatsAppReminder(rent);
-      });
+      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); const r = rentals.find(x=>x.id===id); if(r) sendWhatsAppReminder(r); });
     });
   }
 
   // CRUD
-  function addOrUpdateRental(e) {
+  function addOrUpdate(e) {
     e.preventDefault();
     const userName = document.getElementById('userName').value.trim();
     const platform = document.getElementById('platform').value.trim();
     const startDate = document.getElementById('startDate').value;
-    let durationDays = parseInt(document.getElementById('durationDays').value);
+    let periodValue = parseFloat(document.getElementById('periodValue').value);
+    const periodUnit = document.getElementById('periodUnit').value;
     const costPrice = parseFloat(document.getElementById('costPrice').value);
     const sellPrice = parseFloat(document.getElementById('sellPrice').value);
-    let whatsappRaw = document.getElementById('whatsappNumber').value.trim();
+    const whatsappRaw = document.getElementById('whatsappNumber').value.trim();
+    const purchaseNote = document.getElementById('purchaseNote').value.trim();
 
-    if (!userName || !platform || !startDate || isNaN(durationDays) || durationDays < 1) {
-      alert("Completa todos los campos (Usuario, Plataforma, Fecha inicio, Duración)");
-      return;
-    }
-    if (isNaN(costPrice) || isNaN(sellPrice) || costPrice < 0 || sellPrice < 0) {
-      alert("Precios inválidos");
-      return;
-    }
-    if (!whatsappRaw) {
-      alert("Ingresa el número de WhatsApp (solo 9 dígitos, ej: 987654321)");
-      return;
-    }
-    const formattedWhatsApp = formatPeruvianNumber(whatsappRaw);
-    if (!formattedWhatsApp || !isValidPeruvianNumber(formattedWhatsApp)) {
-      alert("Número inválido. Debe ser 9 dígitos (ej: 987654321). No incluyas código de país.");
-      return;
-    }
-
-    const endDate = addDaysToDate(startDate, durationDays);
+    if (!userName || !platform || !startDate || isNaN(periodValue) || periodValue <= 0) { alert("Completa los campos obligatorios."); return; }
+    if (isNaN(costPrice) || isNaN(sellPrice) || costPrice < 0 || sellPrice < 0) { alert("Precios inválidos."); return; }
+    if (!whatsappRaw) { alert("WhatsApp: ingresa 9 dígitos."); return; }
+    const formattedWhats = formatPeruvianNumber(whatsappRaw);
+    if (!formattedWhats || !isValidPeruvianNumber(formattedWhats)) { alert("Número peruano inválido. Escribe 9 dígitos, ej: 987654321"); return; }
+    const endDate = addPeriodToDate(startDate, periodValue, periodUnit);
     if (!endDate) { alert("Fecha inválida"); return; }
 
     if (editModeId !== null) {
       const idx = rentals.findIndex(r => r.id === editModeId);
-      if (idx !== -1) {
-        rentals[idx] = { ...rentals[idx], userName, platform, startDate, durationDays, endDate, costPrice, sellPrice, whatsapp: formattedWhatsApp };
-      }
+      if (idx !== -1) rentals[idx] = { ...rentals[idx], userName, platform, startDate, periodValue, periodUnit, endDate, costPrice, sellPrice, whatsapp: formattedWhats, purchaseNote };
       editModeId = null;
-      document.getElementById('submitBtn').innerHTML = '➕ Agregar';
+      document.getElementById('submitBtn').innerHTML = '➕ Agregar alquiler';
       document.getElementById('cancelEditBtn').style.display = 'none';
     } else {
-      const newId = Date.now();
-      rentals.push({ id: newId, userName, platform, startDate, durationDays, endDate, costPrice, sellPrice, whatsapp: formattedWhatsApp });
+      rentals.push({ id: Date.now(), userName, platform, startDate, periodValue, periodUnit, endDate, costPrice, sellPrice, whatsapp: formattedWhats, purchaseNote });
     }
-    sortByEndDate();
+    sortByEnd();
     saveToLocal();
     renderAll();
     resetForm();
@@ -579,23 +556,24 @@
     document.getElementById('userName').value = rental.userName;
     document.getElementById('platform').value = rental.platform;
     document.getElementById('startDate').value = rental.startDate;
-    document.getElementById('durationDays').value = rental.durationDays;
+    document.getElementById('periodValue').value = rental.periodValue;
+    document.getElementById('periodUnit').value = rental.periodUnit;
     document.getElementById('costPrice').value = rental.costPrice;
     document.getElementById('sellPrice').value = rental.sellPrice;
-    const displayNumber = rental.whatsapp ? rental.whatsapp.slice(2) : '';
-    document.getElementById('whatsappNumber').value = displayNumber;
+    document.getElementById('whatsappNumber').value = rental.whatsapp.slice(2);
+    document.getElementById('purchaseNote').value = rental.purchaseNote || '';
     editModeId = rental.id;
     document.getElementById('submitBtn').innerHTML = '✏️ Actualizar';
     document.getElementById('cancelEditBtn').style.display = 'inline-block';
-    updateEndDatePreview();
+    updateEndPreview();
     document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
   }
 
   function deleteRentalById(id) {
-    if (confirm("¿Eliminar este registro?")) {
+    if (confirm("¿Eliminar este alquiler? La ganancia asociada se perderá.")) {
       rentals = rentals.filter(r => r.id !== id);
       if (editModeId === id) resetForm();
-      sortByEndDate();
+      sortByEnd();
       saveToLocal();
       renderAll();
     }
@@ -603,65 +581,67 @@
 
   function resetForm() {
     document.getElementById('rentalForm').reset();
-    document.getElementById('durationDays').value = "30";
+    document.getElementById('periodValue').value = "1";
+    document.getElementById('periodUnit').value = "months";
     document.getElementById('costPrice').value = "45.00";
     document.getElementById('sellPrice').value = "85.00";
-    document.getElementById('startDate').value = "";
     document.getElementById('whatsappNumber').value = "";
-    updateEndDatePreview();
+    document.getElementById('purchaseNote').value = "";
+    updateEndPreview();
     editModeId = null;
-    document.getElementById('submitBtn').innerHTML = '➕ Agregar';
+    document.getElementById('submitBtn').innerHTML = '➕ Agregar alquiler';
     document.getElementById('cancelEditBtn').style.display = 'none';
   }
 
-  function updateEndDatePreview() {
+  function updateEndPreview() {
     const start = document.getElementById('startDate').value;
-    const dur = parseInt(document.getElementById('durationDays').value);
-    if (start && !isNaN(dur) && dur > 0) {
-      const end = addDaysToDate(start, dur);
+    const val = parseFloat(document.getElementById('periodValue').value);
+    const unit = document.getElementById('periodUnit').value;
+    if (start && !isNaN(val) && val > 0) {
+      const end = addPeriodToDate(start, val, unit);
       document.getElementById('endDatePreview').value = end || "—";
-    } else {
-      document.getElementById('endDatePreview').value = "—";
-    }
+    } else { document.getElementById('endDatePreview').value = "—"; }
   }
 
-  function quickExampleFill() {
+  function quickExample() {
     const hoy = new Date().toISOString().split('T')[0];
-    const duracionEjemplo = 30;
-    document.getElementById('userName').value = "Cliente Ejemplo";
+    document.getElementById('userName').value = "Cliente Demo";
     document.getElementById('platform').value = "Plataforma Ejemplo";
     document.getElementById('startDate').value = hoy;
-    document.getElementById('durationDays').value = duracionEjemplo;
-    document.getElementById('costPrice').value = "42.00";
-    document.getElementById('sellPrice').value = "80.00";
+    document.getElementById('periodValue').value = "3";
+    document.getElementById('periodUnit').value = "months";
+    document.getElementById('costPrice').value = "80";
+    document.getElementById('sellPrice').value = "150";
     document.getElementById('whatsappNumber').value = "999888777";
-    updateEndDatePreview();
-    alert("✅ Campos cargados con ejemplo (número de 9 dígitos). Modifica antes de guardar si deseas.");
+    document.getElementById('purchaseNote').value = "Compra trimestral";
+    updateEndPreview();
+    alert("✅ Ejemplo cargado: 3 meses. Puedes modificar la cantidad y unidad.");
   }
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
+  function presetPeriod(value, unit) {
+    document.getElementById('periodValue').value = value;
+    document.getElementById('periodUnit').value = unit;
+    updateEndPreview();
   }
+
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;': m==='<'?'&lt;':'&gt;'); }
 
   // Eventos
-  document.getElementById('rentalForm').addEventListener('submit', addOrUpdateRental);
+  document.getElementById('rentalForm').addEventListener('submit', addOrUpdate);
   document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
-  document.getElementById('startDate').addEventListener('change', updateEndDatePreview);
-  document.getElementById('durationDays').addEventListener('input', updateEndDatePreview);
-  document.getElementById('quickFillBtn').addEventListener('click', quickExampleFill);
+  document.getElementById('startDate').addEventListener('change', updateEndPreview);
+  document.getElementById('periodValue').addEventListener('input', updateEndPreview);
+  document.getElementById('periodUnit').addEventListener('change', updateEndPreview);
+  document.getElementById('quickFillBtn').addEventListener('click', quickExample);
+  document.querySelectorAll('.quick-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = parseFloat(btn.dataset.value);
+      const unit = btn.dataset.unit;
+      presetPeriod(val, unit);
+    });
+  });
 
-  function init() {
-    loadInitialData();
-    renderAll();
-    updateEndDatePreview();
-    setInterval(() => { renderAll(); }, 60000);
-  }
+  function init() { loadInitial(); renderAll(); updateEndPreview(); setInterval(()=> renderAll(), 60000); }
   init();
 </script>
 </body>
