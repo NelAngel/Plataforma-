@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>RentExpress Pro · Periodos personalizables (meses/años/días) · Ganancias totales</title>
+  <title>RentExpress Pro · Periodos a medida (meses/años/días) · Ganancias totales</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -24,7 +24,6 @@
       margin: 0 auto;
     }
 
-    /* Header */
     .header {
       display: flex;
       flex-wrap: wrap;
@@ -33,6 +32,7 @@
       gap: 20px;
       margin-bottom: 32px;
     }
+
     .title-section h1 {
       font-size: 2rem;
       font-weight: 700;
@@ -41,6 +41,7 @@
       -webkit-background-clip: text;
       color: transparent;
     }
+
     .sub {
       font-size: 0.85rem;
       color: #2c6b5e;
@@ -48,11 +49,13 @@
       padding-left: 14px;
       margin-top: 6px;
     }
+
     .stats-panel {
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
     }
+
     .stat-card {
       background: white;
       border-radius: 60px;
@@ -61,12 +64,12 @@
       font-size: 0.9rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
+
     .total-earnings {
       background: #e2f3e9;
       color: #1d6e42;
     }
 
-    /* Formulario */
     .form-card {
       background: white;
       border-radius: 32px;
@@ -75,17 +78,20 @@
       box-shadow: 0 12px 28px -10px rgba(0,0,0,0.08);
       border: 1px solid #e6edf2;
     }
+
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 18px 24px;
       align-items: end;
     }
+
     .input-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
+
     .input-group label {
       font-size: 0.7rem;
       font-weight: 700;
@@ -93,6 +99,7 @@
       letter-spacing: 0.5px;
       color: #2a7353;
     }
+
     input, select, button {
       border-radius: 20px;
       border: 1px solid #cfdee9;
@@ -102,11 +109,13 @@
       background: white;
       transition: 0.15s;
     }
+
     input:focus, select:focus {
       outline: none;
       border-color: #2d8c5a;
       box-shadow: 0 0 0 3px rgba(45,140,90,0.15);
     }
+
     button {
       background: #236b44;
       color: white;
@@ -114,15 +123,18 @@
       border: none;
       cursor: pointer;
     }
+
     button:hover {
       background: #2c8254;
       transform: translateY(-1px);
     }
+
     .btn-outline {
       background: #f0f5fa;
       color: #1f6b55;
       border: 1px solid #cbdae6;
     }
+
     .quick-preset {
       background: #fef2e0;
       color: #b45f1b;
@@ -131,6 +143,7 @@
       padding: 6px 14px;
       border-radius: 30px;
     }
+
     .preset-group {
       display: flex;
       flex-wrap: wrap;
@@ -140,16 +153,17 @@
       padding-top: 16px;
       border-top: 1px solid #e3eef5;
     }
+
     .helper-note {
       font-size: 0.65rem;
       color: #5f8b74;
       margin-top: 4px;
     }
 
-    /* Alertas */
     .alerts-section {
       margin-bottom: 28px;
     }
+
     .alert-card {
       background: #fffaf0;
       border-left: 6px solid #f2a65a;
@@ -162,6 +176,7 @@
       justify-content: space-between;
       gap: 12px;
     }
+
     .no-alert {
       background: #e5f3ec;
       border-radius: 24px;
@@ -170,7 +185,6 @@
       font-weight: 500;
     }
 
-    /* Tabla */
     .table-wrapper {
       background: white;
       border-radius: 28px;
@@ -178,25 +192,30 @@
       box-shadow: 0 6px 16px rgba(0,0,0,0.05);
       border: 1px solid #ecf3f8;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.8rem;
       min-width: 1050px;
     }
+
     th, td {
       padding: 14px 12px;
       text-align: left;
       border-bottom: 1px solid #eef2f8;
     }
+
     th {
       background: #fbfdfe;
       color: #1a6f5a;
       font-weight: 700;
     }
+
     tr:hover td {
       background: #fefcf6;
     }
+
     .status-badge {
       display: inline-block;
       padding: 4px 12px;
@@ -204,13 +223,27 @@
       font-size: 0.7rem;
       font-weight: 700;
     }
-    .status-critical { background: #ffe8e4; color: #b93a2a; }
-    .status-warning { background: #fff0e0; color: #c7791a; }
-    .status-ok { background: #e2f4ea; color: #1f7a45; }
+
+    .status-critical {
+      background: #ffe8e4;
+      color: #b93a2a;
+    }
+
+    .status-warning {
+      background: #fff0e0;
+      color: #c7791a;
+    }
+
+    .status-ok {
+      background: #e2f4ea;
+      color: #1f7a45;
+    }
+
     .beneficio {
       font-weight: 700;
       color: #1f8a4a;
     }
+
     .small-btn {
       padding: 5px 12px;
       font-size: 0.7rem;
@@ -221,18 +254,36 @@
       cursor: pointer;
       margin-right: 5px;
     }
-    .wapp-btn { background: #d9f5e6; color: #075e54; }
-    .edit-btn { background: #e3edfc; color: #1f6392; }
-    .del-btn { background: #fee9e5; color: #bc2c1c; }
+
+    .wapp-btn {
+      background: #d9f5e6;
+      color: #075e54;
+    }
+
+    .edit-btn {
+      background: #e3edfc;
+      color: #1f6392;
+    }
+
+    .del-btn {
+      background: #fee9e5;
+      color: #bc2c1c;
+    }
+
     footer {
       margin-top: 28px;
       text-align: center;
       font-size: 0.7rem;
       color: #6b9a80;
     }
+
     @media (max-width: 760px) {
-      body { padding: 16px; }
-      .form-card { padding: 20px; }
+      body {
+        padding: 16px;
+      }
+      .form-card {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -241,7 +292,7 @@
   <div class="header">
     <div class="title-section">
       <h1>⚡ RentExpress Pro · S/</h1>
-      <div class="sub">Periodos en días, meses o años · Elige cantidad exacta (1,2,3,4... meses/años)</div>
+      <div class="sub">Periodos en días, meses o años · Elige cualquier cantidad (1, 2, 3, 4... meses o años)</div>
     </div>
     <div class="stats-panel">
       <div class="stat-card" id="totalCount">📋 0 alquileres</div>
@@ -249,18 +300,17 @@
     </div>
   </div>
 
-  <!-- Formulario principal con campo numérico y selector de unidad -->
   <div class="form-card">
     <form id="rentalForm">
       <div class="form-grid">
         <div class="input-group"><label>👤 Usuario</label><input type="text" id="userName" placeholder="Ej: Sofía Ramírez" required></div>
         <div class="input-group"><label>📱 Plataforma</label><input type="text" id="platform" placeholder="Netflix, Disney+..." required></div>
         <div class="input-group"><label>📅 Fecha inicio</label><input type="date" id="startDate" required></div>
-        
+
         <div class="input-group">
-          <label>🔢 Cantidad (número de unidades)</label>
-          <input type="number" id="periodValue" value="1" min="0.5" step="1" required>
-          <div class="helper-note">Ej: 2, 3, 6, 12</div>
+          <label>🔢 Cantidad (ej: 1, 2, 3, 3.5)</label>
+          <input type="number" id="periodValue" value="1" min="0.5" step="0.5" required>
+          <div class="helper-note">Puedes usar enteros o medios (ej: 2, 3, 6, 12)</div>
         </div>
         <div class="input-group">
           <label>📆 Unidad</label>
@@ -281,8 +331,7 @@
           <button type="button" id="quickFillBtn" style="background:#f4e6c3; color:#8a5a2c;">🚀 Rápido: Ejemplo</button>
         </div>
       </div>
-      
-      <!-- Botones rápidos para meses y años comunes -->
+
       <div class="preset-group">
         <span style="font-size:0.7rem; font-weight:600; background:#eef3f0; padding:4px 12px; border-radius:30px;">📌 Seleccionar periodo rápido:</span>
         <button type="button" class="quick-preset" data-value="1" data-unit="months">1 mes</button>
@@ -298,14 +347,12 @@
     </form>
   </div>
 
-  <!-- Alertas urgentes -->
   <div class="alerts-section" id="urgentAlertsContainer"></div>
 
-  <!-- Tabla de alquileres -->
   <div class="table-wrapper">
     <table>
-      <thead>——
-<th>Usuario</th><th>Plataforma</th><th>Inicio</th><th>Fin</th><th>Periodo</th><th>Costo S/</th><th>Venta S/</th><th>Beneficio</th><th>Tiempo restante</th><th>Nota</th><th>WhatsApp</th><th>Acciones</th>
+      <thead>
+        <tr><th>Usuario</th><th>Plataforma</th><th>Inicio</th><th>Fin</th><th>Periodo</th><th>Costo S/</th><th>Venta S/</th><th>Beneficio</th><th>Tiempo restante</th><th>Nota</th><th>WhatsApp</th><th>Acciones</th>
       </thead>
       <tbody id="tableBody"><tr><td colspan="12" style="text-align:center;">Cargando datos...</td></tr></tbody>
     </table>
@@ -314,11 +361,11 @@
 </div>
 
 <script>
-  // ======================== MODELO Y LÓGICA ========================
+  // ---------- MODELO ----------
   let rentals = [];
   let editModeId = null;
 
-  // Sumar periodo a fecha
+  // Funciones de fechas
   function addPeriodToDate(startDateStr, value, unit) {
     const date = new Date(startDateStr);
     if (isNaN(date.getTime())) return "";
@@ -364,7 +411,7 @@
     return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
-  // Validación número peruano (9 dígitos)
+  // Validación de número peruano (9 dígitos)
   function formatPeruvianNumber(raw) {
     let cleaned = raw.replace(/\D/g, '');
     if (cleaned.length === 0) return null;
@@ -438,8 +485,7 @@
       { id: 101, userName: "Marco Díaz", platform: "Netflix", startDate: "2025-05-09", periodValue: 1, periodUnit: "months", endDate: "2025-06-09", costPrice: 40, sellPrice: 75, whatsapp: "51912345678", purchaseNote: "Mensual" },
       { id: 102, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, periodValue: 3, periodUnit: "months", endDate: addPeriodToDate(hoy, 3, "months"), costPrice: 100, sellPrice: 190, whatsapp: "51998765432", purchaseNote: "Trimestre" },
       { id: 103, userName: "Carlos Ruiz", platform: "Spotify", startDate: hoy, periodValue: 1, periodUnit: "years", endDate: addPeriodToDate(hoy, 1, "years"), costPrice: 150, sellPrice: 290, whatsapp: "51977788899", purchaseNote: "Anual" },
-      { id: 104, userName: "Ana Quispe", platform: "Prime Video", startDate: hoy, periodValue: 6, periodUnit: "months", endDate: addPeriodToDate(hoy, 6, "months"), costPrice: 200, sellPrice: 380, whatsapp: "51999988877", purchaseNote: "Semestre" },
-      { id: 105, userName: "Pedro Ríos", platform: "HBO Max", startDate: hoy, periodValue: 2, periodUnit: "months", endDate: addPeriodToDate(hoy, 2, "months"), costPrice: 70, sellPrice: 130, whatsapp: "5195554433", purchaseNote: "2 meses" }
+      { id: 104, userName: "Ana Quispe", platform: "Prime Video", startDate: hoy, periodValue: 6, periodUnit: "months", endDate: addPeriodToDate(hoy, 6, "months"), costPrice: 200, sellPrice: 380, whatsapp: "51999988877", purchaseNote: "Semestre" }
     ];
   }
   function sortByEnd() {
@@ -479,11 +525,11 @@
           <button class="small-btn wapp-btn" data-id="${r.id}" data-action="wapp">💬 WP</button>
           <button class="small-btn edit-btn" data-id="${r.id}" data-action="edit">✏️</button>
           <button class="small-btn del-btn" data-id="${r.id}" data-action="delete">🗑️</button>
-         </td>
+        </td>
       </tr>`;
     }
     tbody.innerHTML = html;
-    // Eventos botones
+    // Eventos
     document.querySelectorAll('.wapp-btn[data-action="wapp"]').forEach(btn => {
       btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); const r = rentals.find(x=>x.id===id); if(r) sendWhatsAppReminder(r); });
     });
@@ -527,7 +573,7 @@
     const whatsappRaw = document.getElementById('whatsappNumber').value.trim();
     const purchaseNote = document.getElementById('purchaseNote').value.trim();
 
-    if (!userName || !platform || !startDate || isNaN(periodValue) || periodValue <= 0) { alert("Completa los campos obligatorios."); return; }
+    if (!userName || !platform || !startDate || isNaN(periodValue) || periodValue <= 0) { alert("Completa los campos obligatorios (Usuario, Plataforma, Fecha inicio, Cantidad válida)."); return; }
     if (isNaN(costPrice) || isNaN(sellPrice) || costPrice < 0 || sellPrice < 0) { alert("Precios inválidos."); return; }
     if (!whatsappRaw) { alert("WhatsApp: ingresa 9 dígitos."); return; }
     const formattedWhats = formatPeruvianNumber(whatsappRaw);
