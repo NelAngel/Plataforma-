@@ -219,7 +219,7 @@
   <div class="header">
     <div>
       <h1>⚡ RentExpress · S/</h1>
-      <div class="sub">Alquileres rápidos · Alertas por WhatsApp (Perú)</div>
+      <div class="sub">Alquileres rápidos · Alertas personalizadas (con nombre y tono formal)</div>
     </div>
     <div class="stats" id="totalStats"></div>
   </div>
@@ -259,7 +259,7 @@
       <tbody id="tableBody"><tr><td colspan="10" style="text-align:center;">Cargando...</td></tr></tbody>
     </table>
   </div>
-  <footer>📲 Los mensajes se adaptan según días restantes: 3-2 días (aviso anticipado), 1 día (urge aviso), vencido (conexión terminada).</footer>
+  <footer>📲 Mensajes personalizados con el nombre del usuario, formato cordial y sin presiones. Firmado por Lyan.</footer>
 </div>
 
 <script>
@@ -306,60 +306,77 @@
     return days !== null && days >= 0 && days <= 2;
   }
 
-  // VALIDACIÓN DE NÚMERO PERUANO (solo 9 dígitos, o con 51 opcional)
+  // Formatear fecha a dd/mm/aaaa
+  function formatDateToDMY(dateStr) {
+    if (!dateStr) return "";
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+
+  // VALIDACIÓN DE NÚMERO PERUANO (solo 9 dígitos)
   function formatPeruvianNumber(raw) {
     let cleaned = raw.replace(/\D/g, '');
     if (cleaned.length === 0) return null;
-    // Si ya tiene 11 dígitos y empieza con 51, asumimos bien
-    if (cleaned.length === 11 && cleaned.startsWith('51')) {
-      return cleaned;
-    }
-    // Si tiene 9 dígitos, agregamos 51
-    if (cleaned.length === 9) {
-      return `51${cleaned}`;
-    }
-    // Si tiene 10 dígitos y empieza con 9 (caso 9XXXXXXXXX), también agregamos 51
-    if (cleaned.length === 10 && cleaned.startsWith('9')) {
-      return `51${cleaned}`;
-    }
-    // Si tiene 10 y empieza con 51??? no es común, pero lo dejamos pasar si es 51 + 8? no, mejor rechazar
+    if (cleaned.length === 11 && cleaned.startsWith('51')) return cleaned;
+    if (cleaned.length === 9) return `51${cleaned}`;
+    if (cleaned.length === 10 && cleaned.startsWith('9')) return `51${cleaned}`;
     return null;
   }
 
   function isValidPeruvianNumber(raw) {
     const formatted = formatPeruvianNumber(raw);
     if (!formatted) return false;
-    // Debe ser 51 seguido de exactamente 9 dígitos (total 11)
     return /^51[0-9]{9}$/.test(formatted);
   }
 
-  // --- MENSAJES WHATSAPP DINÁMICOS ---
+  // --- MENSAJES FORMALES CON NOMBRE DEL USUARIO ---
   function generateWhatsAppMessage(rental) {
     const days = daysRemaining(rental.endDate);
     const userName = rental.userName;
     const platform = rental.platform;
-    const endDate = rental.endDate;
-    let mensajeBase = `📢 *RENTEXPRESS - RECORDATORIO*%0A%0A👤 *Usuario:* ${encodeURIComponent(userName)}%0A🎬 *Plataforma:* ${encodeURIComponent(platform)}%0A📅 *Fecha fin:* ${endDate}%0A`;
+    const startDateFormatted = formatDateToDMY(rental.startDate);
+    const endDateFormatted = formatDateToDMY(rental.endDate);
     
-    if (days === null) {
-      mensajeBase += `⚠️ *Estado:* Fecha no disponible.%0A`;
-    } else if (days < 0) {
-      mensajeBase += `⛔ *SERVICIO CONCLUIDO*%0ASu conexión ha terminado. Para reactivar, por favor realice la renovación cuanto antes.%0A`;
-    } else if (days === 1) {
-      mensajeBase += `🚨 *¡URGENTE! FALTA 1 DÍA* 🚨%0AQuerido usuario, por favor avise con anticipación si desea continuar. Su suscripción vence MAÑANA. No perjudique el servicio, confirme renovación.%0A`;
-    } else if (days === 2) {
-      mensajeBase += `⏳ *FALTAN 2 DÍAS* ⏳%0ALe recomendamos renovar con anticipación para evitar interrupciones. Agradecemos su pronta respuesta.%0A`;
-    } else if (days === 3) {
-      mensajeBase += `📆 *FALTAN 3 DÍAS* 📆%0AEs momento de planificar la renovación. Si desea seguir disfrutando, confirme la continuidad. ¡Gracias!%0A`;
-    } else if (days === 0) {
-      mensajeBase += `🔥 *¡HOY ES EL ÚLTIMO DÍA!* 🔥%0APor favor, confirme su renovación hoy mismo para no perder el servicio.%0A`;
-    } else if (days > 3) {
-      mensajeBase += `✅ *Plazo disponible:* ${days} días restantes. Recuerde que puede renovar cuando lo desee.%0A`;
-    } else {
-      mensajeBase += `🔔 Queda(n) ${days} día(s). Agradecemos su puntualidad.%0A`;
+    // Caso: VENCIDO (días negativos)
+    if (days !== null && days < 0) {
+      let mensaje = `Estimado/a ${userName},\n\nLe informamos que su período de ${platform} ha EXPIRADO.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\n⏰ Su tiempo de servicio ha concluido. Si desea renovar su suscripción, por favor indíquenoslo para gestionar la reactivación.\n\nAgradecemos su atención y quedamos atentos a su respuesta.\n\nAtentamente,\nLyan.`;
+      return encodeURIComponent(mensaje);
     }
-    mensajeBase += `%0A🔗 Responda este mensaje para coordinar. ¡Gracias por confiar en nosotros!`;
-    return mensajeBase;
+    
+    // Caso: faltan 3 días
+    if (days === 3) {
+      let mensaje = `Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} finaliza en 3 días.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\nSi desea continuar con el servicio, puede confirmar su intención de renovación. Estaremos atentos a su respuesta.\n\nCordialmente,\nLyan.`;
+      return encodeURIComponent(mensaje);
+    }
+    
+    // Caso: faltan 2 días
+    if (days === 2) {
+      let mensaje = `Estimado/a ${userName},\n\nLe informamos que su período de ${platform} vence en 2 días.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\nPara evitar la interrupción del servicio, le sugerimos considerar la renovación. Agradeceremos nos confirme su decisión.\n\nAtentamente,\nLyan.`;
+      return encodeURIComponent(mensaje);
+    }
+    
+    // Caso: falta 1 día (VENCE MAÑANA) - tono formal y sin presiones
+    if (days === 1) {
+      let mensaje = `Estimado/a ${userName},\n\nLe comunicamos que su suscripción de ${platform} vence MAÑANA.\n📅 Período contratado: desde ${startDateFormatted} hasta ${endDateFormatted}.\n\nSi desea mantener el servicio activo, le agradeceremos nos confirme su voluntad de renovación. Quedamos a la espera de su respuesta.\n\nSaludos cordiales,\nLyan.`;
+      return encodeURIComponent(mensaje);
+    }
+    
+    // Caso: hoy es el último día (0 días)
+    if (days === 0) {
+      let mensaje = `Estimado/a ${userName},\n\nEl día de hoy finaliza su período de ${platform}.\n📅 Fecha de término: ${endDateFormatted}.\n\nSi requiere renovar el servicio, por favor indíquenoslo para proceder con la gestión.\n\nAgradecemos su preferencia.\n\nAtentamente,\nLyan.`;
+      return encodeURIComponent(mensaje);
+    }
+    
+    // Caso: más de 3 días (aviso preventivo)
+    if (days !== null && days > 3) {
+      let mensaje = `Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} tiene ${days} días restantes.\n📅 Fecha de finalización: ${endDateFormatted}.\n\nPuede realizar su renovación con anticipación cuando lo considere conveniente. Estamos para ayudarle.\n\nCordialmente,\nLyan.`;
+      return encodeURIComponent(mensaje);
+    }
+    
+    // Mensaje genérico (fallback)
+    let mensaje = `Estimado/a ${userName}, le contactamos para informarle sobre su servicio de ${platform}. Por favor, contáctenos para cualquier consulta. Atentamente, Lyan.`;
+    return encodeURIComponent(mensaje);
   }
 
   function sendWhatsAppReminder(rental) {
@@ -368,7 +385,6 @@
       alert("⚠️ No hay número de WhatsApp registrado. Edite el registro para agregarlo.");
       return;
     }
-    // El número ya debería estar almacenado con formato 51XXXXXXXXX, pero validamos
     if (!/^51[0-9]{9}$/.test(storedNumber)) {
       alert("El número guardado no tiene formato peruano válido. Edítelo e ingrese solo los 9 dígitos.");
       return;
@@ -380,11 +396,11 @@
 
   // --- LOCALSTORAGE Y DATOS INICIALES ---
   function saveToLocal() {
-    localStorage.setItem('rentalManagerSolesV4', JSON.stringify(rentals));
+    localStorage.setItem('rentalManagerSolesV6', JSON.stringify(rentals));
   }
 
   function loadInitialData() {
-    const stored = localStorage.getItem('rentalManagerSolesV4');
+    const stored = localStorage.getItem('rentalManagerSolesV6');
     if (stored && JSON.parse(stored).length) {
       rentals = JSON.parse(stored);
     } else {
@@ -399,13 +415,16 @@
     const fecha2 = dentro2.toISOString().split('T')[0];
     const dentro1 = new Date(); dentro1.setDate(dentro1.getDate()+1);
     const fecha1 = dentro1.toISOString().split('T')[0];
+    const dentro3 = new Date(); dentro3.setDate(dentro3.getDate()+3);
+    const fecha3 = dentro3.toISOString().split('T')[0];
     const vencido = new Date(); vencido.setDate(vencido.getDate()-3);
     const fechaVenc = vencido.toISOString().split('T')[0];
     rentals = [
-      { id: 1001, userName: "Marco Díaz", platform: "Netflix", startDate: hoy, durationDays: 2, endDate: fecha2, costPrice: 40, sellPrice: 75, whatsapp: "51912345678" },
-      { id: 1002, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, durationDays: 1, endDate: fecha1, costPrice: 38, sellPrice: 70, whatsapp: "51998765432" },
-      { id: 1003, userName: "Vencido Ejemplo", platform: "HBO Max", startDate: "2026-05-01", durationDays: 30, endDate: fechaVenc, costPrice: 50, sellPrice: 90, whatsapp: "5195554433" },
-      { id: 1004, userName: "Ana Quispe", platform: "Spotify", startDate: "2026-06-10", durationDays: 30, endDate: "2026-07-10", costPrice: 25, sellPrice: 55, whatsapp: "51977788899" }
+      { id: 1001, userName: "Marco Díaz", platform: "Netflix", startDate: "2025-05-09", durationDays: 30, endDate: "2025-06-09", costPrice: 40, sellPrice: 75, whatsapp: "51912345678" },
+      { id: 1002, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, durationDays: 2, endDate: fecha2, costPrice: 38, sellPrice: 70, whatsapp: "51998765432" },
+      { id: 1003, userName: "Cliente Vencido", platform: "HBO Max", startDate: "2026-05-01", durationDays: 30, endDate: fechaVenc, costPrice: 50, sellPrice: 90, whatsapp: "5195554433" },
+      { id: 1004, userName: "Carlos Ruiz", platform: "Spotify", startDate: hoy, durationDays: 3, endDate: fecha3, costPrice: 25, sellPrice: 55, whatsapp: "51977788899" },
+      { id: 1005, userName: "Ana Quispe", platform: "Prime Video", startDate: hoy, durationDays: 1, endDate: fecha1, costPrice: 30, sellPrice: 60, whatsapp: "51999988877" }
     ];
     rentals = rentals.map(r => ({ ...r, endDate: addDaysToDate(r.startDate, r.durationDays) }));
   }
@@ -431,7 +450,6 @@
       const beneficio = (r.sellPrice - r.costPrice).toFixed(2);
       const remainingText = getRemainingText(r.endDate);
       const statusClass = getStatusClass(r.endDate);
-      // Mostrar solo últimos 9 dígitos del número (quitar el 51)
       const displayWhats = r.whatsapp ? r.whatsapp.slice(2) : '—';
       html += `<tr>
         <td><strong>${escapeHtml(r.userName)}</strong></td>
@@ -564,7 +582,6 @@
     document.getElementById('durationDays').value = rental.durationDays;
     document.getElementById('costPrice').value = rental.costPrice;
     document.getElementById('sellPrice').value = rental.sellPrice;
-    // Al editar, mostrar solo los 9 dígitos (sin 51)
     const displayNumber = rental.whatsapp ? rental.whatsapp.slice(2) : '';
     document.getElementById('whatsappNumber').value = displayNumber;
     editModeId = rental.id;
@@ -611,13 +628,13 @@
   function quickExampleFill() {
     const hoy = new Date().toISOString().split('T')[0];
     const duracionEjemplo = 30;
-    document.getElementById('userName').value = "Cliente Rápido";
+    document.getElementById('userName').value = "Cliente Ejemplo";
     document.getElementById('platform').value = "Plataforma Ejemplo";
     document.getElementById('startDate').value = hoy;
     document.getElementById('durationDays').value = duracionEjemplo;
     document.getElementById('costPrice').value = "42.00";
     document.getElementById('sellPrice').value = "80.00";
-    document.getElementById('whatsappNumber').value = "999888777";  // solo 9 dígitos
+    document.getElementById('whatsappNumber').value = "999888777";
     updateEndDatePreview();
     alert("✅ Campos cargados con ejemplo (número de 9 dígitos). Modifica antes de guardar si deseas.");
   }
