@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>RentExpress · Tabla desplegable · Contacto proveedor</title>
+    <title>RentExpress · Tabla desplegable · Acciones verticales</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -85,7 +85,6 @@
         .total-earnings .stat-value { color: #1f8a4a; }
         .expense-stat .stat-value { color: #bc5a3c; }
 
-        /* Accordion secciones */
         .accordion {
             background: white;
             border-radius: 28px;
@@ -168,6 +167,15 @@
             color: #1f6b55;
             border: 1px solid #cbdae6;
         }
+        .btn-excel {
+            background: #1e7e34;
+        }
+        .btn-excel:hover { background: #2a9d4a; }
+        .btn-import {
+            background: #b45f1b;
+        }
+        .btn-import:hover { background: #c97a2a; }
+
         .helper-note {
             font-size: 0.65rem;
             color: #5f8b74;
@@ -244,7 +252,7 @@
             gap: 10px;
         }
 
-        /* Tabla principal desplegable */
+        /* Tabla desplegable */
         .table-wrapper {
             background: white;
             border-radius: 28px;
@@ -265,17 +273,20 @@
             text-align: left;
             border-bottom: 2px solid #e2edf2;
         }
-        /* Filas colapsadas (muestran solo nombre, tiempo y acciones) */
         .rental-row td {
             padding: 12px 10px;
             border-bottom: 1px solid #eef2f8;
             vertical-align: middle;
+        }
+        /* Solo ciertas celdas son clickeables para expandir */
+        .rental-row .toggle-cell,
+        .rental-row .name-cell,
+        .rental-row .time-cell {
             cursor: pointer;
         }
         .rental-row .toggle-cell {
             width: 30px;
             text-align: center;
-            cursor: pointer;
             font-weight: 700;
             color: #2d8c5a;
         }
@@ -287,10 +298,40 @@
             font-weight: 600;
         }
         .rental-row .actions-cell {
+            cursor: default;
             white-space: nowrap;
         }
 
-        /* Fila expandida (detalles) */
+        /* Acciones en vertical */
+        .actions-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-start;
+        }
+        .actions-vertical .small-btn {
+            width: 100%;
+            text-align: center;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            border-radius: 30px;
+            background: #f0f4f9;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .actions-vertical .wapp-btn { background: #d9f5e6; color: #075e54; }
+        .actions-vertical .wapp-provider-btn { background: #fde9d9; color: #b45f1b; }
+        .actions-vertical .edit-btn { background: #e3edfc; color: #1f6392; }
+        .actions-vertical .del-btn { background: #fee9e5; color: #bc2c1c; }
+
+        /* Fila expandida */
+        .detail-row {
+            display: none;  /* Oculto por defecto */
+        }
+        .detail-row.visible {
+            display: table-row;  /* Visible cuando tiene la clase .visible */
+        }
         .detail-row td {
             padding: 0 10px 16px 10px;
             background: #fafdfe;
@@ -317,24 +358,6 @@
         .detail-value {
             font-weight: 500;
         }
-        .detail-row .actions-cell {
-            padding-top: 8px;
-        }
-
-        .small-btn {
-            padding: 4px 10px;
-            font-size: 0.7rem;
-            border-radius: 30px;
-            background: #f0f4f9;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            margin-right: 4px;
-        }
-        .wapp-btn { background: #d9f5e6; color: #075e54; }
-        .wapp-provider-btn { background: #fde9d9; color: #b45f1b; }
-        .edit-btn { background: #e3edfc; color: #1f6392; }
-        .del-btn { background: #fee9e5; color: #bc2c1c; }
 
         .status-badge {
             display: inline-block;
@@ -347,27 +370,50 @@
         .status-warning { background: #fff0e0; color: #c7791a; }
         .status-ok { background: #e2f4ea; color: #1f7a45; }
 
+        /* Toolbar inferior */
+        .footer-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 28px;
+            border: 1px solid #e2edf2;
+        }
+        .footer-toolbar .btn {
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+        }
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
         footer {
             margin-top: 28px;
             text-align: center;
             font-size: 0.7rem;
             color: #6b9a80;
         }
-        @media (max-width: 700px) { body { padding: 16px; } }
-
-        /* Estilos para el botón de toggle */
-        .toggle-icon {
-            display: inline-block;
-            transition: transform 0.2s;
-        }
-        .rental-row.expanded .toggle-icon {
-            transform: rotate(90deg);
-        }
-        .detail-row {
-            display: none;
-        }
-        .detail-row.visible {
-            display: table-row;
+        @media (max-width: 700px) {
+            body { padding: 16px; }
+            .actions-vertical .small-btn { font-size: 0.65rem; padding: 5px 8px; }
+            .footer-toolbar .btn { padding: 8px 16px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -375,8 +421,8 @@
 <div class="container">
     <div class="header">
         <div>
-            <h1>⚡Rentas NELANGEL · S/</h1>
-            <div class="sub">Tabla desplegable · Contacto de proveedor</div>
+            <h1>⚡ RentExpress · S/</h1>
+            <div class="sub">Tabla desplegable · Acciones verticales</div>
             <div class="peru-time" id="peruDateTime">🕒 Cargando hora Perú...</div>
         </div>
         <div class="stats-panel">
@@ -451,7 +497,7 @@
         </div>
     </div>
 
-    <!-- Tabla principal desplegable -->
+    <!-- Tabla desplegable -->
     <div class="table-wrapper">
         <table>
             <thead>
@@ -467,7 +513,18 @@
             </tbody>
         </table>
     </div>
-    <footer>📲 Haz clic en la flecha para ver todos los detalles. Botones de WhatsApp para cliente y proveedor.</footer>
+
+    <!-- Barra de herramientas inferior -->
+    <div class="footer-toolbar">
+        <button class="btn btn-excel" id="exportExcelBtn">📤 Exportar Excel</button>
+        <div class="file-input-wrapper">
+            <button class="btn btn-import">📥 Importar Excel</button>
+            <input type="file" id="importFileInput" accept=".csv">
+        </div>
+        <span style="font-size:0.7rem; color:#5f8b74; margin-left:8px;">(Formato CSV, compatible con Excel)</span>
+    </div>
+
+    <footer>📲 Haz clic en la flecha, nombre o tiempo para ver/ocultar detalles.</footer>
 </div>
 
 <script>
@@ -654,10 +711,12 @@
                     <td class="name-cell"><strong>${escapeHtml(r.userName)}</strong></td>
                     <td class="time-cell"><span class="status-badge ${statusClass}">${remainingText}</span></td>
                     <td class="actions-cell">
-                        <button class="small-btn wapp-btn" data-id="${r.id}" data-action="wapp-client">💬 Cli</button>
-                        ${hasProvider ? `<button class="small-btn wapp-provider-btn" data-id="${r.id}" data-action="wapp-provider">💬 Prov</button>` : ''}
-                        <button class="small-btn edit-btn" data-id="${r.id}" data-action="edit">✏️</button>
-                        <button class="small-btn del-btn" data-id="${r.id}" data-action="delete">🗑️</button>
+                        <div class="actions-vertical">
+                            <button class="small-btn wapp-btn" data-id="${r.id}" data-action="wapp-client">💬 Cliente</button>
+                            ${hasProvider ? `<button class="small-btn wapp-provider-btn" data-id="${r.id}" data-action="wapp-provider">💬 Proveedor</button>` : ''}
+                            <button class="small-btn edit-btn" data-id="${r.id}" data-action="edit">✏️ Editar</button>
+                            <button class="small-btn del-btn" data-id="${r.id}" data-action="delete">🗑️ Eliminar</button>
+                        </div>
                     </td>
                 </tr>
                 <tr class="detail-row" data-parent="${r.id}">
@@ -681,26 +740,41 @@
         tbody.innerHTML = html;
         updateStatsAndExpenses();
         
-        // Eventos para expandir/colapsar filas
-        document.querySelectorAll('.rental-row .toggle-cell, .rental-row .name-cell, .rental-row .time-cell').forEach(el => {
-            el.addEventListener('click', function(e) {
-                const row = this.closest('.rental-row');
-                const id = row.dataset.id;
-                const detailRow = document.querySelector(`.detail-row[data-parent="${id}"]`);
-                if (detailRow) {
-                    const isVisible = detailRow.classList.contains('visible');
-                    detailRow.classList.toggle('visible');
-                    row.classList.toggle('expanded');
-                    // Actualizar ícono
-                    const icon = row.querySelector('.toggle-icon');
-                    if (icon) icon.textContent = isVisible ? '▶' : '▼';
-                }
-            });
-        });
+        // ========== DELEGACIÓN DE EVENTOS PARA EXPANSIÓN (CORREGIDO) ==========
+        // Usamos una única delegación en tbody para manejar los clics en las celdas toggle
+        function handleRowToggle(e) {
+            const target = e.target;
+            // Verificar si el clic fue en una celda que debe activar el toggle
+            const cell = target.closest('.toggle-cell, .name-cell, .time-cell');
+            if (!cell) return;
+            // Si el clic fue en un botón dentro de esas celdas (no debería, pero por seguridad)
+            if (target.closest('.small-btn')) return;
+            
+            const row = cell.closest('.rental-row');
+            if (!row) return;
+            const id = row.dataset.id;
+            const detailRow = document.querySelector(`.detail-row[data-parent="${id}"]`);
+            if (detailRow) {
+                const isVisible = detailRow.classList.contains('visible');
+                detailRow.classList.toggle('visible');
+                row.classList.toggle('expanded');
+                const icon = row.querySelector('.toggle-icon');
+                if (icon) icon.textContent = isVisible ? '▶' : '▼';
+            }
+        }
         
-        // Eventos para botones de acción
-        document.querySelectorAll('.rental-row .actions-cell .small-btn, .detail-row .actions-cell .small-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+        // Remover listeners anteriores si existen
+        if (window._toggleListener) {
+            tbody.removeEventListener('click', window._toggleListener);
+        }
+        window._toggleListener = handleRowToggle;
+        tbody.addEventListener('click', window._toggleListener);
+        
+        // ========== EVENTOS PARA BOTONES DE ACCIÓN ==========
+        document.querySelectorAll('.actions-vertical .small-btn').forEach(btn => {
+            // Remover listeners antiguos para evitar duplicados
+            btn.removeEventListener('click', btn._handler);
+            const handler = function(e) {
                 e.stopPropagation();
                 const id = parseInt(this.dataset.id);
                 const action = this.dataset.action;
@@ -715,10 +789,12 @@
                 } else if (action === 'delete') {
                     deleteRentalById(id);
                 }
-            });
+            };
+            btn._handler = handler;
+            btn.addEventListener('click', handler);
         });
         
-        // Alertas urgentes (siempre visibles)
+        // Alertas urgentes
         const urgentContainer = document.getElementById('urgentAlertsContainer');
         const urgentRentals = rentals.filter(r => {
             const days = daysRemaining(r.endDate);
@@ -733,12 +809,13 @@
                 urgentHtml += `<div class="alert-card">
                     <div><span style="background:#ffe6c4; padding:4px 12px; border-radius:40px;">⏰ ${days===0?"Hoy vence":`Faltan ${days} días`}</span>
                     <strong>👤 ${escapeHtml(u.userName)}</strong> 📱 ${escapeHtml(u.platform)} 📅 Fin: ${u.endDate}</div>
-                    <button class="small-btn wapp-btn" data-id="${u.id}" data-action="wapp-client" style="background:#25D366;">📲 WhatsApp cliente</button>
-                    ${u.providerPhone ? `<button class="small-btn wapp-provider-btn" data-id="${u.id}" data-action="wapp-provider" style="background:#fde9d9;">📲 Proveedor</button>` : ''}
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="small-btn wapp-btn" data-id="${u.id}" data-action="wapp-client" style="background:#25D366;">📲 Cliente</button>
+                        ${u.providerPhone ? `<button class="small-btn wapp-provider-btn" data-id="${u.id}" data-action="wapp-provider" style="background:#fde9d9;">📲 Proveedor</button>` : ''}
+                    </div>
                 </div>`;
             }
             urgentContainer.innerHTML = urgentHtml;
-            // Eventos para alertas urgentes
             urgentContainer.querySelectorAll('.wapp-btn, .wapp-provider-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -794,12 +871,133 @@
             }
             return encodeURIComponent(`Estimado/a ${userName}, le recordamos que su servicio de ${platform} tiene días restantes. Atentamente, Lyan.`);
         } else {
-            // Mensaje para proveedor (incidencia)
             return encodeURIComponent(`Hola, soy Lyan de RentExpress. Tengo una incidencia con la cuenta ${platform} del cliente ${userName}.\n\nDetalles del alquiler:\n📅 Período: ${startF} - ${endF}\n👤 Cliente: ${userName}\n📱 Plataforma: ${platform}\n\nPor favor, revise el servicio y contácteme para resolverlo. Gracias.`);
         }
     }
     
-    // ======================== CRUD ========================
+    // ======================== EXPORTAR / IMPORTAR EXCEL (CSV) ========================
+    function exportToCSV() {
+        if (rentals.length === 0) {
+            alert("No hay datos para exportar.");
+            return;
+        }
+        const headers = [
+            "ID", "Cliente", "Plataforma", "Fecha Inicio", "Fecha Fin", "Periodo", "Unidad",
+            "Costo Compra (S/)", "Precio Venta (S/)", "Ganancia Neta (S/)",
+            "WhatsApp Cliente", "Teléfono Proveedor", "Nota"
+        ];
+        const rows = rentals.map(r => [
+            r.id,
+            r.userName,
+            r.platform,
+            r.startDate,
+            r.endDate,
+            r.periodValue,
+            r.periodUnit,
+            r.costPrice.toFixed(2),
+            r.sellPrice.toFixed(2),
+            (r.sellPrice - r.costPrice).toFixed(2),
+            r.whatsapp || '',
+            r.providerPhone || '',
+            r.purchaseNote || ''
+        ]);
+        let csvContent = headers.join(',') + '\n';
+        rows.forEach(row => {
+            const escapedRow = row.map(cell => {
+                if (typeof cell === 'string' && (cell.includes(',') || cell.includes('"') || cell.includes('\n'))) {
+                    return `"${cell.replace(/"/g, '""')}"`;
+                }
+                return cell;
+            });
+            csvContent += escapedRow.join(',') + '\n';
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `alquileres_${getPeruCurrentDate()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+    
+    function importFromCSV(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const text = e.target.result;
+                const lines = text.split('\n').filter(line => line.trim() !== '');
+                if (lines.length < 2) {
+                    alert("El archivo CSV está vacío o no tiene datos.");
+                    return;
+                }
+                const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+                const expected = ["ID", "Cliente", "Plataforma", "Fecha Inicio", "Fecha Fin", "Periodo", "Unidad",
+                    "Costo Compra (S/)", "Precio Venta (S/)", "Ganancia Neta (S/)",
+                    "WhatsApp Cliente", "Teléfono Proveedor", "Nota"];
+                const idxMap = {};
+                expected.forEach((key, index) => {
+                    const found = headers.findIndex(h => h.trim().toLowerCase() === key.toLowerCase());
+                    idxMap[key] = found !== -1 ? found : index;
+                });
+                
+                const newRentals = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+                    if (cols.length < 2 || !cols[idxMap["Cliente"]]) continue;
+                    
+                    const r = {
+                        id: parseInt(cols[idxMap["ID"]]) || Date.now() + i,
+                        userName: cols[idxMap["Cliente"]] || '',
+                        platform: cols[idxMap["Plataforma"]] || '',
+                        startDate: cols[idxMap["Fecha Inicio"]] || '',
+                        periodValue: parseFloat(cols[idxMap["Periodo"]]) || 30,
+                        periodUnit: cols[idxMap["Unidad"]] || 'days',
+                        costPrice: parseFloat(cols[idxMap["Costo Compra (S/)"]]) || 0,
+                        sellPrice: parseFloat(cols[idxMap["Precio Venta (S/)"]]) || 0,
+                        whatsapp: cols[idxMap["WhatsApp Cliente"]] || '',
+                        providerPhone: cols[idxMap["Teléfono Proveedor"]] || '',
+                        purchaseNote: cols[idxMap["Nota"]] || ''
+                    };
+                    r.endDate = addPeriodToDate(r.startDate, r.periodValue, r.periodUnit);
+                    if (!r.endDate) continue;
+                    newRentals.push(r);
+                }
+                
+                if (newRentals.length === 0) {
+                    alert("No se encontraron datos válidos en el archivo.");
+                    return;
+                }
+                
+                const action = confirm(`Se encontraron ${newRentals.length} registros. ¿Desea REEMPLAZAR todos los datos actuales? (Cancelar = AGREGAR a los existentes)`);
+                if (action) {
+                    rentals = newRentals;
+                } else {
+                    const existingIds = new Set(rentals.map(r => r.id));
+                    let added = 0;
+                    newRentals.forEach(r => {
+                        if (!existingIds.has(r.id)) {
+                            rentals.push(r);
+                            existingIds.add(r.id);
+                            added++;
+                        }
+                    });
+                    alert(`Se agregaron ${added} nuevos registros. ${newRentals.length - added} duplicados omitidos.`);
+                }
+                sortRentals();
+                saveAll();
+                renderAll();
+                updateStatsAndExpenses();
+            } catch (err) {
+                alert("Error al importar el archivo: " + err.message);
+            }
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+    
+    // ======================== CRUD ALQUILERES ========================
     function addOrUpdateRental(e) {
         e.preventDefault();
         const userName = document.getElementById('userName').value.trim();
@@ -966,6 +1164,15 @@
         btn.addEventListener('click', () => presetPeriod(parseFloat(btn.dataset.value), btn.dataset.unit));
     });
     document.getElementById('addAcquisitionBtn').addEventListener('click', addAcquisition);
+    
+    // Exportar e Importar (botones en footer)
+    document.getElementById('exportExcelBtn').addEventListener('click', exportToCSV);
+    document.getElementById('importFileInput').addEventListener('change', function(e) {
+        if (this.files && this.files.length > 0) {
+            importFromCSV(this.files[0]);
+            this.value = '';
+        }
+    });
     
     function init() {
         loadInitial();
