@@ -1,741 +1,979 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>RentExpress Perú · Fechas exactas (UTC-5) · Ganancias totales</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>RentExpress · Tabla desplegable · Contacto proveedor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f4f9;
+            font-family: 'Inter', system-ui, sans-serif;
+            padding: 24px 20px;
+            color: #0a2b3c;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .title-section h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a5f5f, #2d7a47);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            font-size: 0.8rem;
+            color: #2c6b5e;
+            border-left: 3px solid #2d8c5a;
+            padding-left: 12px;
+            margin-top: 6px;
+        }
+        .peru-time {
+            background: #e8f0fe;
+            color: #1a5276;
+            font-family: monospace;
+            font-size: 0.7rem;
+            padding: 5px 14px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        .stats-panel {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 140px;
+        }
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #5f8b74;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1d6e42;
+        }
+        .total-earnings .stat-value { color: #1f8a4a; }
+        .expense-stat .stat-value { color: #bc5a3c; }
 
-    body {
-      background: #f0f4f9;
-      font-family: 'Inter', system-ui, sans-serif;
-      padding: 28px 24px;
-      color: #0a2b3c;
-    }
+        /* Accordion secciones */
+        .accordion {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            border: 1px solid #e2edf2;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: #ffffff;
+            padding: 16px 24px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid transparent;
+            transition: 0.2s;
+            user-select: none;
+        }
+        .accordion-header:hover { background: #fafcfd; }
+        .accordion-header .icon {
+            font-size: 1.3rem;
+            transition: transform 0.2s;
+        }
+        .accordion.active .accordion-header { border-bottom-color: #e2edf2; }
+        .accordion.active .accordion-header .icon { transform: rotate(180deg); }
+        .accordion-content {
+            display: none;
+            padding: 20px 24px;
+            background: #fefefe;
+            border-top: 1px solid #eef2f5;
+        }
+        .accordion.active .accordion-content { display: block; }
 
-    .container {
-      max-width: 1600px;
-      margin: 0 auto;
-    }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px 20px;
+            align-items: end;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .input-group label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #2a7353;
+        }
+        input, select, button {
+            border-radius: 18px;
+            border: 1px solid #cfdee9;
+            padding: 9px 12px;
+            font-size: 0.85rem;
+            font-family: 'Inter', monospace;
+            background: white;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2d8c5a;
+            box-shadow: 0 0 0 3px rgba(45,140,90,0.15);
+        }
+        button {
+            background: #236b44;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2c8254;
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: #f0f5fa;
+            color: #1f6b55;
+            border: 1px solid #cbdae6;
+        }
+        .helper-note {
+            font-size: 0.65rem;
+            color: #5f8b74;
+            margin-top: 4px;
+        }
+        .preset-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+            padding-top: 12px;
+            border-top: 1px solid #e3eef5;
+        }
+        .quick-preset {
+            background: #fef2e0;
+            color: #b45f1b;
+            border: 1px solid #fee2bc;
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
 
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 20px;
-      margin-bottom: 32px;
-    }
+        .mini-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 16px;
+        }
+        .mini-table th, .mini-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #eef2f8;
+            text-align: left;
+        }
+        .expense-summary {
+            background: #eef7f2;
+            border-radius: 24px;
+            padding: 16px 20px;
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            border: 1px solid #cde5da;
+        }
+        .expense-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+        .expense-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #2a7353;
+            font-weight: 700;
+        }
+        .expense-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1d6e42;
+        }
 
-    .title-section h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #1a5f5f, #2d7a47);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
+        .alerts-section { margin-bottom: 24px; }
+        .alert-card {
+            background: #fffaf0;
+            border-left: 5px solid #f2a65a;
+            border-radius: 20px;
+            padding: 10px 18px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
 
-    .sub {
-      font-size: 0.85rem;
-      color: #2c6b5e;
-      border-left: 3px solid #2d8c5a;
-      padding-left: 14px;
-      margin-top: 6px;
-    }
+        /* Tabla principal desplegable */
+        .table-wrapper {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            border: 1px solid #ecf3f8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        th {
+            background: #fbfdfe;
+            color: #1a6f5a;
+            font-weight: 700;
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 2px solid #e2edf2;
+        }
+        /* Filas colapsadas (muestran solo nombre, tiempo y acciones) */
+        .rental-row td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eef2f8;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .rental-row .toggle-cell {
+            width: 30px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 700;
+            color: #2d8c5a;
+        }
+        .rental-row .name-cell {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .rental-row .time-cell {
+            font-weight: 600;
+        }
+        .rental-row .actions-cell {
+            white-space: nowrap;
+        }
 
-    .stats-panel {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+        /* Fila expandida (detalles) */
+        .detail-row td {
+            padding: 0 10px 16px 10px;
+            background: #fafdfe;
+            border-bottom: 1px solid #e2edf2;
+        }
+        .detail-row .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px 16px;
+            padding: 12px 0 4px 0;
+            font-size: 0.85rem;
+            border-top: 1px dashed #dde7ef;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: #5f8b74;
+            font-weight: 600;
+        }
+        .detail-value {
+            font-weight: 500;
+        }
+        .detail-row .actions-cell {
+            padding-top: 8px;
+        }
 
-    .stat-card {
-      background: white;
-      border-radius: 60px;
-      padding: 8px 24px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
+        .small-btn {
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            border-radius: 30px;
+            background: #f0f4f9;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 4px;
+        }
+        .wapp-btn { background: #d9f5e6; color: #075e54; }
+        .wapp-provider-btn { background: #fde9d9; color: #b45f1b; }
+        .edit-btn { background: #e3edfc; color: #1f6392; }
+        .del-btn { background: #fee9e5; color: #bc2c1c; }
 
-    .total-earnings {
-      background: #e2f3e9;
-      color: #1d6e42;
-    }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .status-critical { background: #ffe8e4; color: #b93a2a; }
+        .status-warning { background: #fff0e0; color: #c7791a; }
+        .status-ok { background: #e2f4ea; color: #1f7a45; }
 
-    .peru-time {
-      background: #e8f0fe;
-      color: #1a5276;
-      font-family: monospace;
-      font-size: 0.75rem;
-      padding: 6px 16px;
-      border-radius: 40px;
-      display: inline-block;
-      margin-top: 8px;
-    }
+        footer {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6b9a80;
+        }
+        @media (max-width: 700px) { body { padding: 16px; } }
 
-    .form-card {
-      background: white;
-      border-radius: 32px;
-      padding: 28px 32px;
-      margin-bottom: 32px;
-      box-shadow: 0 12px 28px -10px rgba(0,0,0,0.08);
-      border: 1px solid #e6edf2;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 18px 24px;
-      align-items: end;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .input-group label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #2a7353;
-    }
-
-    input, select, button {
-      border-radius: 20px;
-      border: 1px solid #cfdee9;
-      padding: 10px 14px;
-      font-size: 0.9rem;
-      font-family: 'Inter', monospace;
-      background: white;
-      transition: 0.15s;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #2d8c5a;
-      box-shadow: 0 0 0 3px rgba(45,140,90,0.15);
-    }
-
-    button {
-      background: #236b44;
-      color: white;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #2c8254;
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      background: #f0f5fa;
-      color: #1f6b55;
-      border: 1px solid #cbdae6;
-    }
-
-    .quick-preset {
-      background: #fef2e0;
-      color: #b45f1b;
-      border: 1px solid #fee2bc;
-      font-size: 0.75rem;
-      padding: 6px 14px;
-      border-radius: 30px;
-    }
-
-    .preset-group {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid #e3eef5;
-    }
-
-    .helper-note {
-      font-size: 0.65rem;
-      color: #5f8b74;
-      margin-top: 4px;
-    }
-
-    .alerts-section {
-      margin-bottom: 28px;
-    }
-
-    .alert-card {
-      background: #fffaf0;
-      border-left: 6px solid #f2a65a;
-      border-radius: 24px;
-      padding: 12px 20px;
-      margin-bottom: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .no-alert {
-      background: #e5f3ec;
-      border-radius: 24px;
-      padding: 12px 20px;
-      text-align: center;
-      font-weight: 500;
-    }
-
-    .table-wrapper {
-      background: white;
-      border-radius: 28px;
-      overflow-x: auto;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-      border: 1px solid #ecf3f8;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-      min-width: 1050px;
-    }
-
-    th, td {
-      padding: 14px 12px;
-      text-align: left;
-      border-bottom: 1px solid #eef2f8;
-    }
-
-    th {
-      background: #fbfdfe;
-      color: #1a6f5a;
-      font-weight: 700;
-    }
-
-    tr:hover td {
-      background: #fefcf6;
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 40px;
-      font-size: 0.7rem;
-      font-weight: 700;
-    }
-
-    .status-critical {
-      background: #ffe8e4;
-      color: #b93a2a;
-    }
-
-    .status-warning {
-      background: #fff0e0;
-      color: #c7791a;
-    }
-
-    .status-ok {
-      background: #e2f4ea;
-      color: #1f7a45;
-    }
-
-    .beneficio {
-      font-weight: 700;
-      color: #1f8a4a;
-    }
-
-    .small-btn {
-      padding: 5px 12px;
-      font-size: 0.7rem;
-      border-radius: 40px;
-      background: #f0f4f9;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      margin-right: 5px;
-    }
-
-    .wapp-btn {
-      background: #d9f5e6;
-      color: #075e54;
-    }
-
-    .edit-btn {
-      background: #e3edfc;
-      color: #1f6392;
-    }
-
-    .del-btn {
-      background: #fee9e5;
-      color: #bc2c1c;
-    }
-
-    footer {
-      margin-top: 28px;
-      text-align: center;
-      font-size: 0.7rem;
-      color: #6b9a80;
-    }
-
-    @media (max-width: 760px) {
-      body {
-        padding: 16px;
-      }
-      .form-card {
-        padding: 20px;
-      }
-    }
-  </style>
+        /* Estilos para el botón de toggle */
+        .toggle-icon {
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .rental-row.expanded .toggle-icon {
+            transform: rotate(90deg);
+        }
+        .detail-row {
+            display: none;
+        }
+        .detail-row.visible {
+            display: table-row;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-  <div class="header">
-    <div class="title-section">
-      <h1>⚡ RentExpress Perú · S/</h1>
-      <div class="sub">Fechas exactas (UTC-5) · Periodos en días, meses o años · Ganancias totales</div>
-      <div class="peru-time" id="peruDateTime">🕒 Cargando hora de Perú...</div>
+    <div class="header">
+        <div>
+            <h1>⚡Rentas NELANGEL · S/</h1>
+            <div class="sub">Tabla desplegable · Contacto de proveedor</div>
+            <div class="peru-time" id="peruDateTime">🕒 Cargando hora Perú...</div>
+        </div>
+        <div class="stats-panel">
+            <div class="stat-card" id="totalCount"><div class="stat-label">Alquileres activos</div><div class="stat-value">0</div></div>
+            <div class="stat-card total-earnings" id="totalEarningsCard"><div class="stat-label">Ganancia neta total</div><div class="stat-value">S/ 0.00</div></div>
+            <div class="stat-card expense-stat" id="totalMonthlyExpenseCard"><div class="stat-label">Gasto mensual adquisiciones</div><div class="stat-value">S/ 0.00</div></div>
+        </div>
     </div>
-    <div class="stats-panel">
-      <div class="stat-card" id="totalCount">📋 0 alquileres</div>
-      <div class="stat-card total-earnings" id="totalEarnings">💰 Ganancia total: S/ 0.00</div>
+
+    <div class="alerts-section" id="urgentAlertsContainer"></div>
+
+    <!-- Acordeón: Mis Adquisiciones -->
+    <div class="accordion" id="acquisitionsAccordion">
+        <div class="accordion-header"><span>📦 Mis Adquisiciones (gastos mensuales)</span><span class="icon">▼</span></div>
+        <div class="accordion-content">
+            <div class="form-grid" style="margin-bottom: 20px;">
+                <div class="input-group"><label>🏷️ Nombre</label><input type="text" id="acqName" placeholder="Ej: Aria, Netflix"></div>
+                <div class="input-group"><label>💰 Costo mensual (S/)</label><input type="number" id="acqMonthlyCost" step="0.01" placeholder="0.00"></div>
+                <div class="input-group"><label>📅 Fecha inicio suscripción</label><input type="date" id="acqStartDate"></div>
+                <div class="input-group"><label>📝 Nota</label><input type="text" id="acqNote" placeholder="Opcional"></div>
+                <div class="input-group"><button type="button" id="addAcquisitionBtn">➕ Agregar</button></div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="mini-table" id="acquisitionsTable">
+                    <thead><tr><th>Servicio</th><th>Costo mensual</th><th>Inicio</th><th>Vence tu pago</th><th>Nota</th><th>Acciones</th></thead>
+                    <tbody id="acquisitionsList"></tbody>
+                </table>
+            </div>
+            <div class="expense-summary">
+                <div class="expense-item"><div class="expense-label">Gasto mensual total</div><div class="expense-value" id="totalMonthlyExpenseDetail">S/ 0.00</div></div>
+                <div class="expense-item"><div class="expense-label">Gasto anual estimado</div><div class="expense-value" id="totalYearlyExpense">S/ 0.00</div></div>
+            </div>
+            <div class="helper-note">💡 Solo registro. No afecta ganancias de alquileres.</div>
+        </div>
     </div>
-  </div>
 
-  <div class="form-card">
-    <form id="rentalForm">
-      <div class="form-grid">
-        <div class="input-group"><label>👤 Usuario</label><input type="text" id="userName" placeholder="Ej: Sofía Ramírez" required></div>
-        <div class="input-group"><label>📱 Plataforma</label><input type="text" id="platform" placeholder="Netflix, Disney+..." required></div>
-        <div class="input-group"><label>📅 Fecha inicio</label><input type="date" id="startDate" required></div>
-
-        <div class="input-group">
-          <label>🔢 Cantidad (ej: 1, 2, 3, 3.5)</label>
-          <input type="number" id="periodValue" value="1" min="0.5" step="0.5" required>
-          <div class="helper-note">Puedes usar enteros o medios (ej: 2, 3, 6, 12)</div>
+    <!-- Acordeón: Nuevo Alquiler -->
+    <div class="accordion" id="rentalAccordion">
+        <div class="accordion-header"><span>➕ Nuevo Alquiler a Cliente</span><span class="icon">▼</span></div>
+        <div class="accordion-content">
+            <form id="rentalForm">
+                <div class="form-grid">
+                    <div class="input-group"><label>👤 Cliente</label><input type="text" id="userName" placeholder="Ej: Sofía Ramírez" required></div>
+                    <div class="input-group"><label>📱 Plataforma</label><input type="text" id="platform" placeholder="Netflix, Disney+..." required></div>
+                    <div class="input-group"><label>📅 Inicio alquiler</label><input type="date" id="startDate" required></div>
+                    <div class="input-group"><label>🔢 Cantidad (días)</label><input type="number" id="periodValue" value="30" min="1" step="1" required></div>
+                    <div class="input-group"><label>📆 Unidad</label><select id="periodUnit">
+                        <option value="days" selected>Días</option>
+                        <option value="months">Meses (calendario)</option>
+                        <option value="years">Años</option>
+                    </select></div>
+                    <div class="input-group"><label>💰 Costo de compra (S/)</label><input type="number" id="costPrice" step="0.01" value="50.00" required></div>
+                    <div class="input-group"><label>💵 Precio de venta (S/)</label><input type="number" id="sellPrice" step="0.01" value="85.00" required></div>
+                    <div class="input-group"><label>📞 WhatsApp cliente (9 dígitos)</label><input type="tel" id="whatsappNumber" placeholder="987654321" required></div>
+                    <div class="input-group"><label>📞 Teléfono proveedor (9 dígitos)</label><input type="tel" id="providerPhone" placeholder="987654321"></div>
+                    <div class="input-group"><label>📝 Nota interna</label><input type="text" id="purchaseNote" placeholder="Opcional"></div>
+                    <div class="input-group"><label>🔚 Fin (auto)</label><input type="text" id="endDatePreview" readonly style="background:#f4f9fe;"></div>
+                    <div class="input-group" style="display: flex; gap: 8px;">
+                        <button type="submit" id="submitBtn">➕ Agregar alquiler</button>
+                        <button type="button" id="cancelEditBtn" class="btn-outline" style="display:none;">✖️ Cancelar</button>
+                        <button type="button" id="quickFillBtn" style="background:#f4e6c3; color:#8a5a2c;">🚀 Rápido</button>
+                    </div>
+                </div>
+                <div class="preset-group">
+                    <span style="font-size:0.7rem;">📌 Periodos rápidos (en días):</span>
+                    <button type="button" class="quick-preset" data-value="30" data-unit="days">30 días (1 mes)</button>
+                    <button type="button" class="quick-preset" data-value="90" data-unit="days">90 días (3 meses)</button>
+                    <button type="button" class="quick-preset" data-value="180" data-unit="days">180 días (6 meses)</button>
+                    <button type="button" class="quick-preset" data-value="365" data-unit="days">365 días (1 año)</button>
+                </div>
+            </form>
         </div>
-        <div class="input-group">
-          <label>📆 Unidad</label>
-          <select id="periodUnit">
-            <option value="days">Días</option>
-            <option value="months" selected>Meses</option>
-            <option value="years">Años</option>
-          </select>
-        </div>
-        <div class="input-group"><label>💰 Costo (S/)</label><input type="number" id="costPrice" step="0.01" value="45.00" required></div>
-        <div class="input-group"><label>💵 Venta (S/)</label><input type="number" id="sellPrice" step="0.01" value="85.00" required></div>
-        <div class="input-group"><label>📞 WhatsApp (9 dígitos)</label><input type="tel" id="whatsappNumber" placeholder="987654321" required><div class="helper-note">🔹 Solo 9 dígitos (se agrega 51 automáticamente)</div></div>
-        <div class="input-group"><label>📝 Nota / compra (opcional)</label><input type="text" id="purchaseNote" placeholder="Ej: compra 3 meses"></div>
-        <div class="input-group"><label>🔚 Fecha fin (automática)</label><input type="text" id="endDatePreview" class="readonly-fld" readonly style="background:#f4f9fe;"></div>
-        <div class="input-group" style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
-          <button type="submit" id="submitBtn">➕ Agregar alquiler</button>
-          <button type="button" id="cancelEditBtn" class="btn-outline" style="display:none;">✖️ Cancelar</button>
-          <button type="button" id="quickFillBtn" style="background:#f4e6c3; color:#8a5a2c;">🚀 Rápido: Ejemplo</button>
-        </div>
-      </div>
+    </div>
 
-      <div class="preset-group">
-        <span style="font-size:0.7rem; font-weight:600; background:#eef3f0; padding:4px 12px; border-radius:30px;">📌 Seleccionar periodo rápido:</span>
-        <button type="button" class="quick-preset" data-value="1" data-unit="months">1 mes</button>
-        <button type="button" class="quick-preset" data-value="2" data-unit="months">2 meses</button>
-        <button type="button" class="quick-preset" data-value="3" data-unit="months">3 meses</button>
-        <button type="button" class="quick-preset" data-value="4" data-unit="months">4 meses</button>
-        <button type="button" class="quick-preset" data-value="6" data-unit="months">6 meses</button>
-        <button type="button" class="quick-preset" data-value="12" data-unit="months">1 año (12 meses)</button>
-        <button type="button" class="quick-preset" data-value="2" data-unit="years">2 años</button>
-        <button type="button" class="quick-preset" data-value="7" data-unit="days">7 días</button>
-        <button type="button" class="quick-preset" data-value="15" data-unit="days">15 días</button>
-      </div>
-    </form>
-  </div>
-
-  <div class="alerts-section" id="urgentAlertsContainer"></div>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Usuario</th><th>Plataforma</th><th>Inicio</th><th>Fin</th><th>Periodo</th><th>Costo S/</th><th>Venta S/</th><th>Beneficio</th><th>Tiempo restante</th><th>Nota</th><th>WhatsApp</th><th>Acciones</th>
-      </thead>
-      <tbody id="tableBody"><tr><td colspan="12" style="text-align:center;">Cargando datos...</td></tr></tbody>
-    </table>
-  </div>
-  <footer>📲 Los cálculos de días restantes usan la hora oficial de Perú (UTC-5). Los mensajes son personalizados con el nombre del usuario.</footer>
+    <!-- Tabla principal desplegable -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:30px;"></th>
+                    <th>Cliente</th>
+                    <th>Tiempo restante</th>
+                    <th style="text-align:right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="4" style="text-align:center;">Cargando...</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <footer>📲 Haz clic en la flecha para ver todos los detalles. Botones de WhatsApp para cliente y proveedor.</footer>
 </div>
 
 <script>
-  // ======================== ZONA HORARIA PERÚ (UTC-5) ========================
-  function getPeruCurrentDate() {
-    // Obtiene la fecha actual en formato YYYY-MM-DD (sin hora) basada en UTC-5
-    const now = new Date();
-    // Ajustar a UTC-5 (Perú)
-    const offsetPeru = -5 * 60; // minutos
-    const localOffset = now.getTimezoneOffset(); // minutos diferencia con UTC
-    const diff = offsetPeru - localOffset;
-    const peruDate = new Date(now.getTime() + diff * 60000);
-    return peruDate.toISOString().split('T')[0];
-  }
-
-  function getPeruCurrentDateTimeFormatted() {
-    const now = new Date();
-    const offsetPeru = -5 * 60;
-    const localOffset = now.getTimezoneOffset();
-    const diff = offsetPeru - localOffset;
-    const peruDate = new Date(now.getTime() + diff * 60000);
-    return peruDate.toLocaleString('es-PE', { timeZone: 'America/Lima', hour12: false });
-  }
-
-  // Actualizar reloj Perú en tiempo real
-  function updatePeruClock() {
-    const elem = document.getElementById('peruDateTime');
-    if (elem) {
-      const ahora = new Date().toLocaleString('es-PE', { timeZone: 'America/Lima', hour12: false });
-      elem.innerHTML = `🕒 Perú: ${ahora}`;
+    // ======================== ZONA PERÚ ========================
+    function getPeruCurrentDate() {
+        const now = new Date();
+        const peruDate = new Date(now.toLocaleString("en-US", {timeZone: "America/Lima"}));
+        return peruDate.toISOString().split('T')[0];
     }
-  }
-  setInterval(updatePeruClock, 1000);
-  
-  // Función para calcular días restantes entre dos fechas (YYYY-MM-DD) en zona Perú
-  function daysRemainingPeru(endDateStr) {
-    if (!endDateStr) return null;
-    const todayPeruStr = getPeruCurrentDate(); // "2026-06-13"
-    const today = new Date(todayPeruStr);
-    const end = new Date(endDateStr);
-    const diffTime = end - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  }
-
-  // Sumar periodo a una fecha respetando zona Perú (no cambia zona, solo suma)
-  function addPeriodToDate(startDateStr, value, unit) {
-    const date = new Date(startDateStr);
-    if (isNaN(date.getTime())) return "";
-    if (unit === "days") date.setDate(date.getDate() + value);
-    else if (unit === "months") date.setMonth(date.getMonth() + value);
-    else if (unit === "years") date.setFullYear(date.getFullYear() + value);
-    return date.toISOString().split('T')[0];
-  }
-
-  // Funciones auxiliares para renderizado
-  function getRemainingText(endDateStr) {
-    const days = daysRemainingPeru(endDateStr);
-    if (days === null) return "—";
-    if (days < 0) return `⏰ Vencido (hace ${Math.abs(days)}d)`;
-    if (days === 0) return "⚡ Último día";
-    if (days === 1) return "1 día restante";
-    return `${days} días restantes`;
-  }
-
-  function getStatusClass(endDateStr) {
-    const days = daysRemainingPeru(endDateStr);
-    if (days === null) return "status-ok";
-    if (days < 0) return "status-critical";
-    if (days <= 2) return "status-warning";
-    return "status-ok";
-  }
-
-  function needsUrgentRenewal(endDateStr) {
-    const days = daysRemainingPeru(endDateStr);
-    return days !== null && days >= 0 && days <= 2;
-  }
-
-  function formatDateToDMY(dateStr) {
-    if (!dateStr) return "";
-    const parts = dateStr.split('-');
-    if (parts.length !== 3) return dateStr;
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  }
-
-  // Validación de número peruano (9 dígitos)
-  function formatPeruvianNumber(raw) {
-    let cleaned = raw.replace(/\D/g, '');
-    if (cleaned.length === 0) return null;
-    if (cleaned.length === 11 && cleaned.startsWith('51')) return cleaned;
-    if (cleaned.length === 9) return `51${cleaned}`;
-    if (cleaned.length === 10 && cleaned.startsWith('9')) return `51${cleaned}`;
-    return null;
-  }
-  function isValidPeruvianNumber(raw) {
-    const f = formatPeruvianNumber(raw);
-    return f && /^51[0-9]{9}$/.test(f);
-  }
-
-  // Mensajes formales con nombre de usuario
-  function generateWhatsAppMessage(rental) {
-    const days = daysRemainingPeru(rental.endDate);
-    const userName = rental.userName;
-    const platform = rental.platform;
-    const startF = formatDateToDMY(rental.startDate);
-    const endF = formatDateToDMY(rental.endDate);
-    if (days !== null && days < 0) {
-      return encodeURIComponent(`Estimado/a ${userName},\n\nLe informamos que su período de ${platform} ha EXPIRADO.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\n⏰ Su tiempo de servicio ha concluido. Si desea renovar su suscripción, por favor indíquenoslo para gestionar la reactivación.\n\nAgradecemos su atención y quedamos atentos a su respuesta.\n\nAtentamente,\nLyan.`);
+    
+    function updatePeruClock() {
+        const elem = document.getElementById('peruDateTime');
+        if(elem) {
+            const ahora = new Date().toLocaleString('es-PE', { timeZone: 'America/Lima', hour12: false });
+            elem.innerHTML = `🕒 Perú: ${ahora}`;
+        }
     }
-    if (days === 3) {
-      return encodeURIComponent(`Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} finaliza en 3 días.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nSi desea continuar con el servicio, puede confirmar su intención de renovación. Estaremos atentos a su respuesta.\n\nCordialmente,\nLyan.`);
+    setInterval(updatePeruClock, 1000);
+    
+    // === DÍAS EXACTOS ===
+    function daysRemaining(endDateStr) {
+        if (!endDateStr) return null;
+        const todayLocal = new Date(getPeruCurrentDate() + "T00:00:00");
+        const endLocal = new Date(endDateStr + "T00:00:00");
+        const diffMs = endLocal - todayLocal;
+        return Math.round(diffMs / (1000 * 60 * 60 * 24));
     }
-    if (days === 2) {
-      return encodeURIComponent(`Estimado/a ${userName},\n\nLe informamos que su período de ${platform} vence en 2 días.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nPara evitar la interrupción del servicio, le sugerimos considerar la renovación. Agradeceremos nos confirme su decisión.\n\nAtentamente,\nLyan.`);
+    
+    function getRemainingText(endDateStr) {
+        const days = daysRemaining(endDateStr);
+        if (days === null) return "—";
+        if (days < 0) return `⏰ Vencido hace ${Math.abs(days)} días`;
+        if (days === 0) return "⚡ Vence hoy";
+        if (days === 1) return "📅 Vence mañana";
+        return `📅 Faltan ${days} días`;
     }
-    if (days === 1) {
-      return encodeURIComponent(`Estimado/a ${userName},\n\nLe comunicamos que su suscripción de ${platform} vence MAÑANA.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nSi desea mantener el servicio activo, le agradeceremos nos confirme su voluntad de renovación. Quedamos a la espera de su respuesta.\n\nSaludos cordiales,\nLyan.`);
+    
+    function getStatusClass(endDateStr) {
+        const days = daysRemaining(endDateStr);
+        if (days === null) return "status-ok";
+        if (days < 0) return "status-critical";
+        if (days <= 2) return "status-warning";
+        return "status-ok";
     }
-    if (days === 0) {
-      return encodeURIComponent(`Estimado/a ${userName},\n\nEl día de hoy finaliza su período de ${platform}.\n📅 Fecha de término: ${endF}.\n\nSi requiere renovar el servicio, por favor indíquenoslo para proceder con la gestión.\n\nAgradecemos su preferencia.\n\nAtentamente,\nLyan.`);
+    
+    function addPeriodToDate(startDateStr, value, unit) {
+        const date = new Date(startDateStr + "T00:00:00");
+        if (isNaN(date.getTime())) return "";
+        if (unit === "days") date.setDate(date.getDate() + value);
+        else if (unit === "months") date.setMonth(date.getMonth() + value);
+        else if (unit === "years") date.setFullYear(date.getFullYear() + value);
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
     }
-    if (days !== null && days > 3) {
-      return encodeURIComponent(`Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} tiene ${days} días restantes.\n📅 Fecha de finalización: ${endF}.\n\nPuede realizar su renovación con anticipación cuando lo considere conveniente. Estamos para ayudarle.\n\nCordialmente,\nLyan.`);
+    
+    function formatDateDMY(dateStr) {
+        if(!dateStr) return "";
+        const parts = dateStr.split('-');
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
-    return encodeURIComponent(`Estimado/a ${userName}, le contactamos para informarle sobre su servicio de ${platform}. Atentamente, Lyan.`);
-  }
-
-  function sendWhatsAppReminder(rental) {
-    if (!rental.whatsapp) { alert("⚠️ Número no registrado."); return; }
-    if (!/^51[0-9]{9}$/.test(rental.whatsapp)) { alert("Número peruano inválido."); return; }
-    const msg = generateWhatsAppMessage(rental);
-    window.open(`https://wa.me/${rental.whatsapp}?text=${msg}`, '_blank');
-  }
-
-  // Ganancias totales
-  function totalProfit() {
-    return rentals.reduce((sum, r) => sum + (r.sellPrice - r.costPrice), 0);
-  }
-  function updateStats() {
-    document.getElementById('totalCount').innerText = `📋 ${rentals.length} alquileres`;
-    document.getElementById('totalEarnings').innerHTML = `💰 Ganancia total: S/ ${totalProfit().toFixed(2)}`;
-  }
-
-  // Almacenamiento local
-  let rentals = [];
-  let editModeId = null;
-
-  function saveToLocal() {
-    localStorage.setItem('rentExpressPeru', JSON.stringify(rentals));
-  }
-  function loadInitial() {
-    const stored = localStorage.getItem('rentExpressPeru');
-    if (stored && JSON.parse(stored).length) rentals = JSON.parse(stored);
-    else addDemoData();
-    sortByEnd();
-  }
-  function addDemoData() {
-    const hoy = getPeruCurrentDate();
-    rentals = [
-      { id: 101, userName: "Marco Díaz", platform: "Netflix", startDate: "2025-05-09", periodValue: 1, periodUnit: "months", endDate: "2025-06-09", costPrice: 40, sellPrice: 75, whatsapp: "51912345678", purchaseNote: "Mensual" },
-      { id: 102, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, periodValue: 3, periodUnit: "months", endDate: addPeriodToDate(hoy, 3, "months"), costPrice: 100, sellPrice: 190, whatsapp: "51998765432", purchaseNote: "Trimestre" },
-      { id: 103, userName: "Carlos Ruiz", platform: "Spotify", startDate: hoy, periodValue: 1, periodUnit: "years", endDate: addPeriodToDate(hoy, 1, "years"), costPrice: 150, sellPrice: 290, whatsapp: "51977788899", purchaseNote: "Anual" },
-      { id: 104, userName: "Ana Quispe", platform: "Prime Video", startDate: hoy, periodValue: 6, periodUnit: "months", endDate: addPeriodToDate(hoy, 6, "months"), costPrice: 200, sellPrice: 380, whatsapp: "51999988877", purchaseNote: "Semestre" }
-    ];
-  }
-  function sortByEnd() {
-    rentals.sort((a,b)=> new Date(a.endDate) - new Date(b.endDate));
-  }
-
-  // Renderizado
-  function renderAll() {
-    renderTable();
-    renderUrgentAlerts();
-    updateStats();
-  }
-
-  function renderTable() {
-    const tbody = document.getElementById('tableBody');
-    if (!rentals.length) { tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;">✨ Sin alquileres. Usa "Rápido: Ejemplo" o agrega uno.</td><tr>'; return; }
-    let html = '';
-    for (let r of rentals) {
-      const benef = (r.sellPrice - r.costPrice).toFixed(2);
-      const remaining = getRemainingText(r.endDate);
-      const statusClass = getStatusClass(r.endDate);
-      const phoneShort = r.whatsapp ? r.whatsapp.slice(2) : '—';
-      const periodText = `${r.periodValue} ${r.periodUnit === 'days' ? 'días' : (r.periodUnit === 'months' ? 'mes(es)' : 'año(s)')}`;
-      html += `<tr>
-        <td><strong>${escapeHtml(r.userName)}</strong></td>
-        <td>${escapeHtml(r.platform)}</td>
-        <td>${r.startDate}</td>
-        <td>${r.endDate}</td>
-        <td>${periodText}</td>
-        <td>S/ ${r.costPrice.toFixed(2)}</td>
-        <td>S/ ${r.sellPrice.toFixed(2)}</td>
-        <td class="beneficio">+ S/ ${benef}</td>
-        <td><span class="status-badge ${statusClass}">${remaining}</span></td>
-        <td><small>${escapeHtml(r.purchaseNote || '—')}</small></td>
-        <td><small>${escapeHtml(phoneShort)}</small></td>
-        <td class="action-buttons">
-          <button class="small-btn wapp-btn" data-id="${r.id}" data-action="wapp">💬 WP</button>
-          <button class="small-btn edit-btn" data-id="${r.id}" data-action="edit">✏️</button>
-          <button class="small-btn del-btn" data-id="${r.id}" data-action="delete">🗑️</button>
-         </td>
-      </tr>`;
+    
+    // ======================== DATOS ========================
+    let acquisitions = [];
+    let rentals = [];
+    let editModeId = null;
+    
+    function loadInitial() {
+        const storedAcq = localStorage.getItem('rentExpressAcquisitionsFinal');
+        if(storedAcq) acquisitions = JSON.parse(storedAcq);
+        else {
+            acquisitions = [
+                { id: 101, name: "Aria", monthlyCost: 45, startDate: "2026-06-01", note: "Plan básico" },
+                { id: 102, name: "Netflix", monthlyCost: 65, startDate: "2026-06-10", note: "4K" }
+            ];
+        }
+        const storedRent = localStorage.getItem('rentExpressRentalsFinal');
+        if(storedRent) rentals = JSON.parse(storedRent);
+        else addDemoRentals();
+        sortRentals();
+        renderAcquisitions();
+        renderAll();
+        updateStatsAndExpenses();
     }
-    tbody.innerHTML = html;
+    
+    function addDemoRentals() {
+        const hoy = getPeruCurrentDate();
+        const demoStart = "2026-05-09";
+        const demoEnd = addPeriodToDate(demoStart, 30, "days");
+        rentals = [
+            { id: 1, userName: "Marco Díaz", platform: "Netflix", startDate: demoStart, periodValue: 30, periodUnit: "days", endDate: demoEnd, costPrice: 50, sellPrice: 75, whatsapp: "51912345678", providerPhone: "51987654321", purchaseNote: "30 días exactos (9 mayo → 8 junio)" },
+            { id: 2, userName: "Lucía Fernández", platform: "Disney+", startDate: hoy, periodValue: 90, periodUnit: "days", endDate: addPeriodToDate(hoy, 90, "days"), costPrice: 120, sellPrice: 190, whatsapp: "51998765432", providerPhone: "5195554433", purchaseNote: "90 días" },
+            { id: 3, userName: "Carlos Ruiz", platform: "Aria", startDate: hoy, periodValue: 60, periodUnit: "days", endDate: addPeriodToDate(hoy, 60, "days"), costPrice: 80, sellPrice: 140, whatsapp: "51977788899", providerPhone: "", purchaseNote: "60 días" }
+        ];
+    }
+    
+    function sortRentals() { rentals.sort((a,b)=> new Date(a.endDate + "T00:00:00") - new Date(b.endDate + "T00:00:00")); }
+    function saveAll() {
+        localStorage.setItem('rentExpressAcquisitionsFinal', JSON.stringify(acquisitions));
+        localStorage.setItem('rentExpressRentalsFinal', JSON.stringify(rentals));
+    }
+    
+    function totalNetProfit() {
+        return rentals.reduce((sum, r) => sum + (r.sellPrice - r.costPrice), 0);
+    }
+    function totalMonthlyAcquisitionCost() {
+        return acquisitions.reduce((sum, a) => sum + (a.monthlyCost || 0), 0);
+    }
+    function updateStatsAndExpenses() {
+        document.getElementById('totalCount').querySelector('.stat-value').innerText = `${rentals.length}`;
+        document.getElementById('totalEarningsCard').querySelector('.stat-value').innerHTML = `S/ ${totalNetProfit().toFixed(2)}`;
+        document.getElementById('totalMonthlyExpenseCard').querySelector('.stat-value').innerHTML = `S/ ${totalMonthlyAcquisitionCost().toFixed(2)}`;
+        const totalMonthly = totalMonthlyAcquisitionCost();
+        document.getElementById('totalMonthlyExpenseDetail').innerHTML = `S/ ${totalMonthly.toFixed(2)}`;
+        document.getElementById('totalYearlyExpense').innerHTML = `S/ ${(totalMonthly * 12).toFixed(2)}`;
+    }
+    
+    function renderAcquisitions() {
+        const tbody = document.getElementById('acquisitionsList');
+        if(!acquisitions.length) {
+            tbody.innerHTML = '<tr><td colspan="6">No hay adquisiciones. Agrega una arriba.</td></tr>';
+            return;
+        }
+        let html = '';
+        for(let a of acquisitions) {
+            let venceTexto = '—';
+            if(a.startDate) {
+                const days = daysRemaining(a.startDate);
+                if(days !== null) {
+                    if(days < 0) venceTexto = `Vencido hace ${Math.abs(days)}d`;
+                    else if(days === 0) venceTexto = `Vence HOY`;
+                    else venceTexto = `Vence en ${days} días`;
+                }
+            }
+            html += `<tr>
+                <td><strong>${escapeHtml(a.name)}</strong></td>
+                <td>S/ ${(a.monthlyCost || 0).toFixed(2)}</td>
+                <td>${a.startDate || '—'}</td>
+                <td>${venceTexto}</td>
+                <td>${escapeHtml(a.note || '')}</td>
+                <td><button class="small-btn del-btn" data-id="${a.id}" data-type="acq">🗑️ Eliminar</button></td>
+            </tr>`;
+        }
+        tbody.innerHTML = html;
+        document.querySelectorAll('.del-btn[data-type="acq"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                if(confirm("¿Eliminar esta adquisición?")) {
+                    acquisitions = acquisitions.filter(a => a.id !== id);
+                    saveAll();
+                    renderAcquisitions();
+                    updateStatsAndExpenses();
+                }
+            });
+        });
+        updateStatsAndExpenses();
+    }
+    
+    // ======================== RENDER TABLA DESPLEGABLE ========================
+    function renderAll() {
+        const tbody = document.getElementById('tableBody');
+        if(!rentals.length) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">✨ Sin alquileres. Crea uno nuevo.</td></tr>';
+            updateStatsAndExpenses();
+            return;
+        }
+        let html = '';
+        for(let r of rentals) {
+            const remainingText = getRemainingText(r.endDate);
+            const statusClass = getStatusClass(r.endDate);
+            const netProfit = r.sellPrice - r.costPrice;
+            let periodText = '';
+            if (r.periodUnit === 'days') periodText = `${r.periodValue} días`;
+            else if (r.periodUnit === 'months') periodText = `${r.periodValue} mes(es)`;
+            else periodText = `${r.periodValue} año(s)`;
+            const displayClientWhats = r.whatsapp ? r.whatsapp.slice(2) : '—';
+            const displayProvider = r.providerPhone ? r.providerPhone.slice(2) : '';
+            const hasProvider = r.providerPhone && r.providerPhone.length > 0;
+            
+            html += `
+                <tr class="rental-row" data-id="${r.id}">
+                    <td class="toggle-cell"><span class="toggle-icon">▶</span></td>
+                    <td class="name-cell"><strong>${escapeHtml(r.userName)}</strong></td>
+                    <td class="time-cell"><span class="status-badge ${statusClass}">${remainingText}</span></td>
+                    <td class="actions-cell">
+                        <button class="small-btn wapp-btn" data-id="${r.id}" data-action="wapp-client">💬 Cli</button>
+                        ${hasProvider ? `<button class="small-btn wapp-provider-btn" data-id="${r.id}" data-action="wapp-provider">💬 Prov</button>` : ''}
+                        <button class="small-btn edit-btn" data-id="${r.id}" data-action="edit">✏️</button>
+                        <button class="small-btn del-btn" data-id="${r.id}" data-action="delete">🗑️</button>
+                    </td>
+                </tr>
+                <tr class="detail-row" data-parent="${r.id}">
+                    <td colspan="4">
+                        <div class="detail-grid">
+                            <div class="detail-item"><span class="detail-label">Plataforma</span><span class="detail-value">${escapeHtml(r.platform)}</span></div>
+                            <div class="detail-item"><span class="detail-label">Inicio</span><span class="detail-value">${r.startDate}</span></div>
+                            <div class="detail-item"><span class="detail-label">Fin</span><span class="detail-value">${r.endDate}</span></div>
+                            <div class="detail-item"><span class="detail-label">Periodo</span><span class="detail-value">${periodText}</span></div>
+                            <div class="detail-item"><span class="detail-label">Costo compra</span><span class="detail-value">S/ ${r.costPrice.toFixed(2)}</span></div>
+                            <div class="detail-item"><span class="detail-label">Precio venta</span><span class="detail-value">S/ ${r.sellPrice.toFixed(2)}</span></div>
+                            <div class="detail-item"><span class="detail-label">Ganancia neta</span><span class="detail-value" style="color:#1f8a4a;">+ S/ ${netProfit.toFixed(2)}</span></div>
+                            <div class="detail-item"><span class="detail-label">WhatsApp cliente</span><span class="detail-value">${escapeHtml(displayClientWhats)}</span></div>
+                            <div class="detail-item"><span class="detail-label">Proveedor</span><span class="detail-value">${escapeHtml(displayProvider || '—')}</span></div>
+                            <div class="detail-item"><span class="detail-label">Nota</span><span class="detail-value">${escapeHtml(r.purchaseNote || '')}</span></div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+        tbody.innerHTML = html;
+        updateStatsAndExpenses();
+        
+        // Eventos para expandir/colapsar filas
+        document.querySelectorAll('.rental-row .toggle-cell, .rental-row .name-cell, .rental-row .time-cell').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const row = this.closest('.rental-row');
+                const id = row.dataset.id;
+                const detailRow = document.querySelector(`.detail-row[data-parent="${id}"]`);
+                if (detailRow) {
+                    const isVisible = detailRow.classList.contains('visible');
+                    detailRow.classList.toggle('visible');
+                    row.classList.toggle('expanded');
+                    // Actualizar ícono
+                    const icon = row.querySelector('.toggle-icon');
+                    if (icon) icon.textContent = isVisible ? '▶' : '▼';
+                }
+            });
+        });
+        
+        // Eventos para botones de acción
+        document.querySelectorAll('.rental-row .actions-cell .small-btn, .detail-row .actions-cell .small-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const id = parseInt(this.dataset.id);
+                const action = this.dataset.action;
+                const r = rentals.find(x => x.id === id);
+                if (!r) return;
+                if (action === 'wapp-client') {
+                    sendWhatsAppClient(r);
+                } else if (action === 'wapp-provider') {
+                    sendWhatsAppProvider(r);
+                } else if (action === 'edit') {
+                    editRentalById(id);
+                } else if (action === 'delete') {
+                    deleteRentalById(id);
+                }
+            });
+        });
+        
+        // Alertas urgentes (siempre visibles)
+        const urgentContainer = document.getElementById('urgentAlertsContainer');
+        const urgentRentals = rentals.filter(r => {
+            const days = daysRemaining(r.endDate);
+            return days !== null && days >= 0 && days <= 2;
+        });
+        if(!urgentRentals.length) {
+            urgentContainer.innerHTML = `<div class="no-alert" style="background:#e5f3ec; border-radius:20px; padding:12px; text-align:center;">✅ No hay alquileres con menos de 3 días restantes.</div>`;
+        } else {
+            let urgentHtml = `<div style="margin-bottom:8px;"><strong>⚠️ RENOVACIÓN URGENTE (menos de 3 días)</strong></div>`;
+            for(let u of urgentRentals) {
+                const days = daysRemaining(u.endDate);
+                urgentHtml += `<div class="alert-card">
+                    <div><span style="background:#ffe6c4; padding:4px 12px; border-radius:40px;">⏰ ${days===0?"Hoy vence":`Faltan ${days} días`}</span>
+                    <strong>👤 ${escapeHtml(u.userName)}</strong> 📱 ${escapeHtml(u.platform)} 📅 Fin: ${u.endDate}</div>
+                    <button class="small-btn wapp-btn" data-id="${u.id}" data-action="wapp-client" style="background:#25D366;">📲 WhatsApp cliente</button>
+                    ${u.providerPhone ? `<button class="small-btn wapp-provider-btn" data-id="${u.id}" data-action="wapp-provider" style="background:#fde9d9;">📲 Proveedor</button>` : ''}
+                </div>`;
+            }
+            urgentContainer.innerHTML = urgentHtml;
+            // Eventos para alertas urgentes
+            urgentContainer.querySelectorAll('.wapp-btn, .wapp-provider-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = parseInt(this.dataset.id);
+                    const action = this.dataset.action;
+                    const r = rentals.find(x => x.id === id);
+                    if (!r) return;
+                    if (action === 'wapp-client') sendWhatsAppClient(r);
+                    else if (action === 'wapp-provider') sendWhatsAppProvider(r);
+                });
+            });
+        }
+    }
+    
+    // ======================== FUNCIONES WHATSAPP ========================
+    function sendWhatsAppClient(rental) {
+        let number = rental.whatsapp;
+        if(!number) { alert("Cliente sin número de WhatsApp"); return; }
+        if(!/^51[0-9]{9}$/.test(number)) { alert("Número de cliente inválido"); return; }
+        const msg = generateWhatsAppMessage(rental, 'cliente');
+        window.open(`https://wa.me/${number}?text=${msg}`, '_blank');
+    }
+    
+    function sendWhatsAppProvider(rental) {
+        let number = rental.providerPhone;
+        if(!number) { alert("Proveedor sin número registrado"); return; }
+        if(!/^51[0-9]{9}$/.test(number)) { alert("Número de proveedor inválido"); return; }
+        const msg = generateWhatsAppMessage(rental, 'proveedor');
+        window.open(`https://wa.me/${number}?text=${msg}`, '_blank');
+    }
+    
+    function generateWhatsAppMessage(rental, tipo) {
+        const days = daysRemaining(rental.endDate);
+        const userName = rental.userName;
+        const platform = rental.platform;
+        const startF = formatDateDMY(rental.startDate);
+        const endF = formatDateDMY(rental.endDate);
+        if (tipo === 'cliente') {
+            if(days !== null && days < 0) {
+                return encodeURIComponent(`Estimado/a ${userName},\n\nLe informamos que su período de ${platform} ha EXPIRADO.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\n⏰ Su tiempo de servicio ha concluido. Si desea renovar, indíquenoslo.\n\nAtentamente,\nLyan.`);
+            }
+            if(days === 3) {
+                return encodeURIComponent(`Estimado/a ${userName},\n\nLe recordamos que su suscripción de ${platform} finaliza en 3 días.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nSi desea continuar, confirme su renovación.\n\nCordialmente,\nLyan.`);
+            }
+            if(days === 2) {
+                return encodeURIComponent(`Estimado/a ${userName},\n\nSu período de ${platform} vence en 2 días.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nLe sugerimos considerar la renovación.\n\nAtentamente,\nLyan.`);
+            }
+            if(days === 1) {
+                return encodeURIComponent(`Estimado/a ${userName},\n\nSu suscripción de ${platform} vence MAÑANA.\n📅 Período contratado: desde ${startF} hasta ${endF}.\n\nAgradeceremos nos confirme su renovación.\n\nSaludos,\nLyan.`);
+            }
+            if(days === 0) {
+                return encodeURIComponent(`Estimado/a ${userName},\n\nHoy finaliza su período de ${platform}.\n📅 Fecha de término: ${endF}.\n\nSi desea renovar, indíquenoslo.\n\nAtentamente,\nLyan.`);
+            }
+            return encodeURIComponent(`Estimado/a ${userName}, le recordamos que su servicio de ${platform} tiene días restantes. Atentamente, Lyan.`);
+        } else {
+            // Mensaje para proveedor (incidencia)
+            return encodeURIComponent(`Hola, soy Lyan de RentExpress. Tengo una incidencia con la cuenta ${platform} del cliente ${userName}.\n\nDetalles del alquiler:\n📅 Período: ${startF} - ${endF}\n👤 Cliente: ${userName}\n📱 Plataforma: ${platform}\n\nPor favor, revise el servicio y contácteme para resolverlo. Gracias.`);
+        }
+    }
+    
+    // ======================== CRUD ========================
+    function addOrUpdateRental(e) {
+        e.preventDefault();
+        const userName = document.getElementById('userName').value.trim();
+        const platform = document.getElementById('platform').value.trim();
+        const startDate = document.getElementById('startDate').value;
+        let periodValue = parseFloat(document.getElementById('periodValue').value);
+        const periodUnit = document.getElementById('periodUnit').value;
+        const costPrice = parseFloat(document.getElementById('costPrice').value);
+        const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+        const whatsappRaw = document.getElementById('whatsappNumber').value.trim();
+        const providerRaw = document.getElementById('providerPhone').value.trim();
+        const purchaseNote = document.getElementById('purchaseNote').value.trim();
+        
+        if(!userName || !platform || !startDate || isNaN(periodValue) || periodValue<=0) { alert("Complete campos obligatorios."); return; }
+        if(isNaN(costPrice) || costPrice<0) { alert("Costo de compra inválido"); return; }
+        if(isNaN(sellPrice) || sellPrice<0) { alert("Precio venta inválido"); return; }
+        if(!whatsappRaw) { alert("WhatsApp cliente: ingresa 9 dígitos (ej: 987654321)"); return; }
+        let formattedWhats = whatsappRaw.replace(/\D/g,'');
+        if(formattedWhats.length===9) formattedWhats = '51'+formattedWhats;
+        else if(formattedWhats.length!==11 || !formattedWhats.startsWith('51')) { alert("Número peruano inválido. Usa 9 dígitos."); return; }
+        
+        let formattedProvider = '';
+        if(providerRaw) {
+            let prov = providerRaw.replace(/\D/g,'');
+            if(prov.length===9) formattedProvider = '51'+prov;
+            else if(prov.length===11 && prov.startsWith('51')) formattedProvider = prov;
+            else { alert("Teléfono proveedor inválido. Debe tener 9 dígitos (opcional)."); return; }
+        }
+        
+        const endDate = addPeriodToDate(startDate, periodValue, periodUnit);
+        if(!endDate) { alert("Fecha inválida"); return; }
+        
+        if(editModeId !== null) {
+            const idx = rentals.findIndex(r => r.id === editModeId);
+            if(idx!==-1) {
+                rentals[idx] = { ...rentals[idx], userName, platform, startDate, periodValue, periodUnit, endDate, costPrice, sellPrice, whatsapp: formattedWhats, providerPhone: formattedProvider, purchaseNote };
+            }
+            editModeId = null;
+            document.getElementById('submitBtn').innerHTML = '➕ Agregar alquiler';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        } else {
+            rentals.push({ id: Date.now(), userName, platform, startDate, periodValue, periodUnit, endDate, costPrice, sellPrice, whatsapp: formattedWhats, providerPhone: formattedProvider, purchaseNote });
+        }
+        sortRentals();
+        saveAll();
+        renderAll();
+        resetRentalForm();
+    }
+    
+    function editRentalById(id) {
+        const r = rentals.find(x=>x.id===id);
+        if(!r) return;
+        document.getElementById('userName').value = r.userName;
+        document.getElementById('platform').value = r.platform;
+        document.getElementById('startDate').value = r.startDate;
+        document.getElementById('periodValue').value = r.periodValue;
+        document.getElementById('periodUnit').value = r.periodUnit;
+        document.getElementById('costPrice').value = r.costPrice;
+        document.getElementById('sellPrice').value = r.sellPrice;
+        document.getElementById('whatsappNumber').value = r.whatsapp.slice(2);
+        document.getElementById('providerPhone').value = r.providerPhone ? r.providerPhone.slice(2) : '';
+        document.getElementById('purchaseNote').value = r.purchaseNote || '';
+        editModeId = id;
+        document.getElementById('submitBtn').innerHTML = '✏️ Actualizar';
+        document.getElementById('cancelEditBtn').style.display = 'inline-block';
+        updateEndPreview();
+        document.getElementById('rentalAccordion').classList.add('active');
+        document.getElementById('rentalAccordion').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function deleteRentalById(id) {
+        if(confirm("¿Eliminar este alquiler?")) {
+            rentals = rentals.filter(r=>r.id!==id);
+            if(editModeId===id) resetRentalForm();
+            sortRentals();
+            saveAll();
+            renderAll();
+        }
+    }
+    
+    function resetRentalForm() {
+        document.getElementById('rentalForm').reset();
+        document.getElementById('periodValue').value = "30";
+        document.getElementById('periodUnit').value = "days";
+        document.getElementById('costPrice').value = "50.00";
+        document.getElementById('sellPrice').value = "85.00";
+        document.getElementById('whatsappNumber').value = "";
+        document.getElementById('providerPhone').value = "";
+        document.getElementById('purchaseNote').value = "";
+        updateEndPreview();
+        editModeId = null;
+        document.getElementById('submitBtn').innerHTML = '➕ Agregar alquiler';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+    }
+    
+    function updateEndPreview() {
+        const start = document.getElementById('startDate').value;
+        const val = parseFloat(document.getElementById('periodValue').value);
+        const unit = document.getElementById('periodUnit').value;
+        if(start && !isNaN(val) && val>0) {
+            const end = addPeriodToDate(start, val, unit);
+            document.getElementById('endDatePreview').value = end || "—";
+        } else { document.getElementById('endDatePreview').value = "—"; }
+    }
+    
+    function quickExample() {
+        const hoy = getPeruCurrentDate();
+        document.getElementById('userName').value = "Cliente Ejemplo";
+        document.getElementById('platform').value = "Plataforma Demo";
+        document.getElementById('startDate').value = hoy;
+        document.getElementById('periodValue').value = "30";
+        document.getElementById('periodUnit').value = "days";
+        document.getElementById('costPrice').value = "60";
+        document.getElementById('sellPrice').value = "100";
+        document.getElementById('whatsappNumber').value = "999888777";
+        document.getElementById('providerPhone').value = "998877665";
+        document.getElementById('purchaseNote').value = "Ejemplo con proveedor";
+        updateEndPreview();
+        alert("Ejemplo cargado: 30 días con proveedor.");
+    }
+    
+    function presetPeriod(val, unit) {
+        document.getElementById('periodValue').value = val;
+        document.getElementById('periodUnit').value = unit;
+        updateEndPreview();
+    }
+    
+    function addAcquisition() {
+        const name = document.getElementById('acqName').value.trim();
+        const monthlyCost = parseFloat(document.getElementById('acqMonthlyCost').value);
+        const startDate = document.getElementById('acqStartDate').value;
+        const note = document.getElementById('acqNote').value.trim();
+        if(!name || isNaN(monthlyCost) || monthlyCost<=0) { alert("Nombre y costo mensual válidos"); return; }
+        const newId = Date.now();
+        acquisitions.push({ id: newId, name, monthlyCost, startDate, note });
+        saveAll();
+        renderAcquisitions();
+        updateStatsAndExpenses();
+        document.getElementById('acqName').value = '';
+        document.getElementById('acqMonthlyCost').value = '';
+        document.getElementById('acqStartDate').value = '';
+        document.getElementById('acqNote').value = '';
+    }
+    
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;': m==='<'?'&lt;':'&gt;'); }
+    
+    function setupAccordions() {
+        document.querySelectorAll('.accordion').forEach(acc => {
+            const header = acc.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                acc.classList.toggle('active');
+            });
+        });
+    }
+    
     // Eventos
-    document.querySelectorAll('.wapp-btn[data-action="wapp"]').forEach(btn => {
-      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); const r = rentals.find(x=>x.id===id); if(r) sendWhatsAppReminder(r); });
+    document.getElementById('rentalForm').addEventListener('submit', addOrUpdateRental);
+    document.getElementById('cancelEditBtn').addEventListener('click', resetRentalForm);
+    document.getElementById('startDate').addEventListener('change', updateEndPreview);
+    document.getElementById('periodValue').addEventListener('input', updateEndPreview);
+    document.getElementById('periodUnit').addEventListener('change', updateEndPreview);
+    document.getElementById('quickFillBtn').addEventListener('click', quickExample);
+    document.querySelectorAll('.quick-preset').forEach(btn => {
+        btn.addEventListener('click', () => presetPeriod(parseFloat(btn.dataset.value), btn.dataset.unit));
     });
-    document.querySelectorAll('.edit-btn[data-action="edit"]').forEach(btn => {
-      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); editRentalById(id); });
-    });
-    document.querySelectorAll('.del-btn[data-action="delete"]').forEach(btn => {
-      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); deleteRentalById(id); });
-    });
-  }
-
-  function renderUrgentAlerts() {
-    const container = document.getElementById('urgentAlertsContainer');
-    const urgent = rentals.filter(r => needsUrgentRenewal(r.endDate));
-    if (!urgent.length) { container.innerHTML = `<div class="no-alert">✅ No hay alquileres con menos de 3 días restantes.</div>`; return; }
-    let html = `<div style="margin-bottom: 8px;"><strong>⚠️ RENOVACIÓN URGENTE (menos de 3 días)</strong></div>`;
-    for (let u of urgent) {
-      const days = daysRemainingPeru(u.endDate);
-      html += `<div class="alert-card">
-        <div class="alert-info"><span style="background:#ffe6c4; padding:4px 14px; border-radius:40px;">⏰ ${days === 0 ? "Hoy vence" : `Faltan ${days} días`}</span>
-        <strong>👤 ${escapeHtml(u.userName)}</strong> <span>📱 ${escapeHtml(u.platform)}</span> <span>📅 Fin: ${u.endDate}</span></div>
-        <button class="small-btn wapp-btn urgent-msg" data-id="${u.id}" style="background:#25D366; color:#1a5738;">📲 WhatsApp urgente</button>
-      </div>`;
+    document.getElementById('addAcquisitionBtn').addEventListener('click', addAcquisition);
+    
+    function init() {
+        loadInitial();
+        setupAccordions();
+        updateEndPreview();
+        setInterval(() => { renderAll(); }, 60000);
     }
-    container.innerHTML = html;
-    document.querySelectorAll('.urgent-msg').forEach(btn => {
-      btn.addEventListener('click', e => { const id = parseInt(btn.dataset.id); const r = rentals.find(x=>x.id===id); if(r) sendWhatsAppReminder(r); });
-    });
-  }
-
-  // CRUD
-  function addOrUpdate(e) {
-    e.preventDefault();
-    const userName = document.getElementById('userName').value.trim();
-    const platform = document.getElementById('platform').value.trim();
-    const startDate = document.getElementById('startDate').value;
-    let periodValue = parseFloat(document.getElementById('periodValue').value);
-    const periodUnit = document.getElementById('periodUnit').value;
-    const costPrice = parseFloat(document.getElementById('costPrice').value);
-    const sellPrice = parseFloat(document.getElementById('sellPrice').value);
-    const whatsappRaw = document.getElementById('whatsappNumber').value.trim();
-    const purchaseNote = document.getElementById('purchaseNote').value.trim();
-
-    if (!userName || !platform || !startDate || isNaN(periodValue) || periodValue <= 0) { alert("Completa los campos obligatorios."); return; }
-    if (isNaN(costPrice) || isNaN(sellPrice) || costPrice < 0 || sellPrice < 0) { alert("Precios inválidos."); return; }
-    if (!whatsappRaw) { alert("WhatsApp: ingresa 9 dígitos."); return; }
-    const formattedWhats = formatPeruvianNumber(whatsappRaw);
-    if (!formattedWhats || !isValidPeruvianNumber(formattedWhats)) { alert("Número peruano inválido. Escribe 9 dígitos, ej: 987654321"); return; }
-    const endDate = addPeriodToDate(startDate, periodValue, periodUnit);
-    if (!endDate) { alert("Fecha inválida"); return; }
-
-    if (editModeId !== null) {
-      const idx = rentals.findIndex(r => r.id === editModeId);
-      if (idx !== -1) rentals[idx] = { ...rentals[idx], userName, platform, startDate, periodValue, periodUnit, endDate, costPrice, sellPrice, whatsapp: formattedWhats, purchaseNote };
-      editModeId = null;
-      document.getElementById('submitBtn').innerHTML = '➕ Agregar alquiler';
-      document.getElementById('cancelEditBtn').style.display = 'none';
-    } else {
-      rentals.push({ id: Date.now(), userName, platform, startDate, periodValue, periodUnit, endDate, costPrice, sellPrice, whatsapp: formattedWhats, purchaseNote });
-    }
-    sortByEnd();
-    saveToLocal();
-    renderAll();
-    resetForm();
-  }
-
-  function editRentalById(id) {
-    const rental = rentals.find(r => r.id === id);
-    if (!rental) return;
-    document.getElementById('userName').value = rental.userName;
-    document.getElementById('platform').value = rental.platform;
-    document.getElementById('startDate').value = rental.startDate;
-    document.getElementById('periodValue').value = rental.periodValue;
-    document.getElementById('periodUnit').value = rental.periodUnit;
-    document.getElementById('costPrice').value = rental.costPrice;
-    document.getElementById('sellPrice').value = rental.sellPrice;
-    document.getElementById('whatsappNumber').value = rental.whatsapp.slice(2);
-    document.getElementById('purchaseNote').value = rental.purchaseNote || '';
-    editModeId = rental.id;
-    document.getElementById('submitBtn').innerHTML = '✏️ Actualizar';
-    document.getElementById('cancelEditBtn').style.display = 'inline-block';
-    updateEndPreview();
-    document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function deleteRentalById(id) {
-    if (confirm("¿Eliminar este alquiler?")) {
-      rentals = rentals.filter(r => r.id !== id);
-      if (editModeId === id) resetForm();
-      sortByEnd();
-      saveToLocal();
-      renderAll();
-    }
-  }
-
-  function resetForm() {
-    document.getElementById('rentalForm').reset();
-    document.getElementById('periodValue').value = "1";
-    document.getElementById('periodUnit').value = "months";
-    document.getElementById('costPrice').value = "45.00";
-    document.getElementById('sellPrice').value = "85.00";
-    document.getElementById('whatsappNumber').value = "";
-    document.getElementById('purchaseNote').value = "";
-    updateEndPreview();
-    editModeId = null;
-    document.getElementById('submitBtn').innerHTML = '➕ Agregar alquiler';
-    document.getElementById('cancelEditBtn').style.display = 'none';
-  }
-
-  function updateEndPreview() {
-    const start = document.getElementById('startDate').value;
-    const val = parseFloat(document.getElementById('periodValue').value);
-    const unit = document.getElementById('periodUnit').value;
-    if (start && !isNaN(val) && val > 0) {
-      const end = addPeriodToDate(start, val, unit);
-      document.getElementById('endDatePreview').value = end || "—";
-    } else { document.getElementById('endDatePreview').value = "—"; }
-  }
-
-  function quickExample() {
-    const hoy = getPeruCurrentDate();
-    document.getElementById('userName').value = "Cliente Demo";
-    document.getElementById('platform').value = "Plataforma Ejemplo";
-    document.getElementById('startDate').value = hoy;
-    document.getElementById('periodValue').value = "3";
-    document.getElementById('periodUnit').value = "months";
-    document.getElementById('costPrice').value = "80";
-    document.getElementById('sellPrice').value = "150";
-    document.getElementById('whatsappNumber').value = "999888777";
-    document.getElementById('purchaseNote').value = "Compra trimestral";
-    updateEndPreview();
-    alert("✅ Ejemplo cargado: 3 meses. Puedes modificar la cantidad y unidad.");
-  }
-
-  function presetPeriod(value, unit) {
-    document.getElementById('periodValue').value = value;
-    document.getElementById('periodUnit').value = unit;
-    updateEndPreview();
-  }
-
-  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;': m==='<'?'&lt;':'&gt;'); }
-
-  // Eventos
-  document.getElementById('rentalForm').addEventListener('submit', addOrUpdate);
-  document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
-  document.getElementById('startDate').addEventListener('change', updateEndPreview);
-  document.getElementById('periodValue').addEventListener('input', updateEndPreview);
-  document.getElementById('periodUnit').addEventListener('change', updateEndPreview);
-  document.getElementById('quickFillBtn').addEventListener('click', quickExample);
-  document.querySelectorAll('.quick-preset').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const val = parseFloat(btn.dataset.value);
-      const unit = btn.dataset.unit;
-      presetPeriod(val, unit);
-    });
-  });
-
-  function init() { loadInitial(); renderAll(); updateEndPreview(); setInterval(()=> renderAll(), 60000); updatePeruClock(); }
-  init();
+    init();
 </script>
 </body>
 </html>
